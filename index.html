@@ -1,0 +1,3089 @@
+<!DOCTYPE html>
+<html lang="fr" class="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>THE HIVE — Bureau d’études BTP à Libreville | Concevoir autrement</title>
+<meta name="description" content="Bureau d’études techniques en bâtiment et travaux publics à Libreville, Gabon. Plus de 36 projets conçus : logements, commerces, équipements publics, infrastructures.">
+<meta property="og:title" content="THE HIVE — Bureau d'études BTP Gabon">
+<meta property="og:description" content="Bureau d’études techniques BTP à Libreville (Gabon). Demandez votre devis de structure et d'architecture.">
+<meta property="og:type" content="website">
+<link rel="icon" type="image/png" href="assets/brand/the-hive-logo.png">
+<meta property="og:image" content="assets/brand/the-hive-logo.png">
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+
+<!-- Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;600;700;800&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<!-- Tailwind CSS CDN -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    darkMode: 'class',
+    theme: {
+      extend: {
+        colors: {
+          hive: {
+            bg: '#0A0D0C',
+            bgCard: '#161B19',
+            bgHover: '#1E2422',
+            ink: '#FFFFFF',
+            muted: '#A0AAA5',
+            line: 'rgba(255, 255, 255, 0.15)',
+            lineLight: 'rgba(255, 255, 255, 0.08)'
+          }
+        },
+        fontFamily: {
+          title: ['Bricolage Grotesque', 'sans-serif'],
+          sans: ['IBM Plex Sans', 'sans-serif'],
+          mono: ['JetBrains Mono', 'monospace']
+        }
+      }
+    }
+  }
+</script>
+
+<!-- GSAP + ScrollTrigger CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+<style>
+  :root {
+    --bg-main: #0A0D0C;
+    --bg-card: #161B19;
+    --bg-hover: #1E2422;
+    --text-main: #FFFFFF;
+    --text-muted: #A0AAA5;
+    --border-color: rgba(255, 255, 255, 0.15);
+  }
+
+  body {
+    background-color: var(--bg-main);
+    color: var(--text-main);
+    font-family: 'IBM Plex Sans', sans-serif;
+    overflow-x: hidden;
+  }
+
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg-main); }
+  ::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 999px; }
+  ::-webkit-scrollbar-thumb:hover { background: #FFFFFF; }
+
+  /* Blueprint Background Grid */
+  .blueprint-grid {
+    background-size: 40px 40px;
+    background-image: 
+      linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  }
+
+  /* Hexagon Clip Paths & Honeycomb Module */
+  .honeycomb {
+    position: relative;
+    width: 320px;
+    height: 330px;
+    margin: 0 auto;
+  }
+  .hex-btn {
+    --c: polygon(25% 0, 75% 0, 100% 50%, 75% 100%, 25% 100%, 0 50%);
+    position: absolute;
+    width: 104px;
+    height: 90px;
+    border: 0;
+    padding: 0;
+    cursor: pointer;
+    clip-path: var(--c);
+    background: #FFFFFF;
+    color: #0A0D0C;
+    font-size: 0.75rem;
+    font-weight: 600;
+    transition: transform 0.25s ease, background-color 0.25s ease;
+  }
+  .hex-btn::before {
+    content: "";
+    position: absolute;
+    inset: 2px;
+    clip-path: var(--c);
+    background: var(--bg-card);
+    transition: background-color 0.25s ease;
+  }
+  .hex-btn span {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    padding: 0 6px;
+    text-align: center;
+    z-index: 2;
+    color: var(--text-muted);
+  }
+  .hex-btn b {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-size: 1.15rem;
+    font-weight: 800;
+    margin-top: 2px;
+    color: var(--text-main);
+  }
+  .hex-btn[aria-pressed="true"] span {
+    color: #0A0D0C;
+  }
+  .hex-btn[aria-pressed="true"]::before {
+    background: #FFFFFF;
+  }
+  .hex-btn[aria-pressed="true"] b {
+    color: #0A0D0C;
+  }
+  .hex-btn:hover {
+    transform: scale(1.08);
+    z-index: 10;
+  }
+  .hex-btn:hover::before {
+    background: var(--bg-hover);
+  }
+  .hex-btn[aria-pressed="true"]:hover::before {
+    background: #FFFFFF;
+  }
+
+  /* Glow Card Borders */
+  .glow-border {
+    position: relative;
+    border: 1px solid var(--border-color);
+  }
+  .glow-border::after {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), transparent 60%);
+    border-radius: inherit;
+    z-index: -1;
+    pointer-events: none;
+  }
+
+  /* Infinite Partner Marquee */
+  .marquee-track {
+    display: flex;
+    width: max-content;
+    animation: marquee 24s linear infinite;
+  }
+  .marquee-track:hover { animation-play-state: paused; }
+  @keyframes marquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  /* Carte du Gabon - Styling */
+  .gabon-shape {
+    fill: rgba(255, 255, 255, 0.03);
+    stroke: #FFFFFF;
+    stroke-width: 1.5;
+    stroke-dasharray: 4 2;
+    transition: fill 0.3s ease;
+  }
+  .city-node {
+    cursor: pointer;
+    transition: transform 0.25s ease;
+  }
+  .city-node:hover {
+    transform: scale(1.3);
+  }
+  .city-node circle.main-dot {
+    fill: #FFFFFF;
+    stroke: var(--bg-main);
+    stroke-width: 2.5;
+  }
+  .city-node text {
+    fill: var(--text-main);
+    font-size: 11px;
+    font-weight: 600;
+    font-family: 'IBM Plex Sans', sans-serif;
+  }
+
+  #budget-print-sheet { display: none; }
+  .local-admin-control { display: none !important; }
+  .admin-unlocked .local-admin-control { display: inline-flex !important; }
+
+  @media print {
+    body * { visibility: hidden !important; }
+    #budget-print-sheet,
+    #budget-print-sheet * { visibility: visible !important; }
+    #budget-print-sheet {
+      display: block !important;
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      padding: 24px;
+      color: #111;
+      background: #fff;
+      font: 12pt Arial, sans-serif;
+    }
+    #budget-print-sheet h1 { font-size: 22pt; }
+    #budget-print-sheet h2 { margin-top: 20px; font-size: 15pt; }
+    #budget-print-sheet table { width: 100%; border-collapse: collapse; }
+    #budget-print-sheet th,
+    #budget-print-sheet td { padding: 8px; border: 1px solid #999; text-align: left; }
+  }
+</style>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ProfessionalService",
+  "name": "THE HIVE BTP",
+  "slogan": "Concevoir autrement",
+  "description": "Bureau d’études techniques en bâtiment et travaux publics à Libreville, Gabon.",
+  "email": "btphiveproject@gmail.com",
+  "telephone": "+241077219469",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "BP 7677, Ozangué",
+    "addressLocality": "Libreville",
+    "addressCountry": "GA"
+  }
+}
+</script>
+</head>
+<body class="antialiased bg-hive-bg text-hive-ink">
+
+  <!-- Top Progress Bar -->
+  <div id="scroll-progress" class="fixed top-0 left-0 h-1 bg-white z-50 w-0 transition-all duration-75"></div>
+
+  <!-- Header Sticky -->
+  <header class="fixed top-0 inset-x-0 z-40 backdrop-blur-md bg-hive-bg/90 border-b border-hive-line py-3.5">
+    <div class="max-w-7xl mx-auto px-6 flex items-center justify-between gap-4">
+      
+      <a href="#sec-1" class="flex items-center gap-3" aria-label="THE HIVE — Accueil">
+        <img src="assets/brand/the-hive-logo.png" alt="Logo officiel THE HIVE" class="w-12 h-10 shrink-0 object-contain">
+        <div class="flex flex-col">
+          <span class="font-title font-extrabold text-lg leading-none tracking-tight">THE HIVE</span>
+          <span class="font-mono text-[10px] text-hive-muted tracking-wider uppercase mt-0.5">Concevoir autrement</span>
+        </div>
+      </a>
+
+      <!-- Navigation Menu -->
+      <nav class="hidden lg:flex items-center gap-6 text-xs font-mono uppercase tracking-wider text-hive-muted">
+        <a href="#sec-1" class="hover:text-white transition-colors">01. Accueil</a>
+        <a href="#sec-simulateur" class="hover:text-white transition-colors">02. Simulateur</a>
+        <a href="#sec-services" class="hover:text-white transition-colors">03. Prestations</a>
+        <a href="#sec-projets" class="hover:text-white transition-colors">04. Projets</a>
+        <a href="#sec-equipe" class="hover:text-white transition-colors">05. Équipe</a>
+        <a href="#sec-galerie" class="hover:text-white transition-colors">06. Galerie</a>
+        <a href="#sec-maillage" class="hover:text-white transition-colors">07. Carte & Devis</a>
+      </nav>
+
+      <!-- Action CTA -->
+      <div class="flex items-center gap-3">
+        <button type="button" id="open-admin" class="hidden sm:inline-flex px-3 py-2 rounded-lg border border-hive-line text-hive-muted font-mono text-[10px] uppercase tracking-wider hover:border-white hover:text-white transition-colors">
+          Administration
+        </button>
+        <a href="https://wa.me/241077219469?text=Bonjour%20THE%20HIVE%2C%20je%20souhaite%20des%20informations%20pour%20un%20projet%20BTP." target="_blank" rel="noopener" class="hidden sm:inline-flex items-center gap-2 px-3.5 py-2 rounded-lg border border-hive-line bg-hive-bgCard text-white font-mono text-xs hover:bg-hive-bgHover transition-all">
+          <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-1.157 4.228 4.305-1.129z"/></svg>
+          +241 077 21 94 69
+        </a>
+        <a href="#devis" class="inline-flex px-4 py-2 rounded-lg bg-white text-hive-bg font-title font-bold text-xs uppercase tracking-wider hover:bg-hive-muted transition-all shadow-md">
+          Demander un devis
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Bouton WhatsApp Flottant sur toutes les pages -->
+  <a href="https://wa.me/241077219469?text=Bonjour%20THE%20HIVE%2C%20je%20souhaite%20discuter%20d%27un%20projet." target="_blank" rel="noopener" aria-label="Contact WhatsApp rapide" class="fixed bottom-6 right-6 z-50 flex items-center gap-3 p-3.5 bg-white hover:bg-hive-muted text-hive-bg rounded-full shadow-2xl transition-all duration-300 hover:scale-105 group border border-white">
+    <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-1.157 4.228 4.305-1.129z"/></svg>
+    <span class="max-w-0 overflow-hidden whitespace-nowrap group-hover:max-w-xs transition-all duration-300 font-mono text-xs font-semibold pr-1">
+      WhatsApp Direct (+241 077 21 94 69)
+    </span>
+  </a>
+
+  <main>
+    <!-- ==========================================
+         SECTION 01: ACCUEIL & HONEYCOMB ALVÉOLAIRE
+         ========================================== -->
+    <section id="sec-1" class="relative min-h-screen blueprint-grid overflow-hidden flex flex-col justify-center pt-28 pb-16">
+      <div class="max-w-7xl mx-auto px-6 w-full flex flex-col items-center">
+        
+        <div class="text-center z-10 max-w-4xl mx-auto">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-hive-line bg-hive-bgCard text-hive-muted text-xs font-mono uppercase tracking-widest mb-6">
+            <span class="w-2 h-2 rounded-full bg-white animate-pulse"></span>
+            Bureau d’Études BTP — Libreville, Gabon
+          </div>
+
+          <h1 class="hero-title text-4xl sm:text-6xl lg:text-7xl font-title font-extrabold tracking-tight uppercase leading-none mb-6">
+            <span class="block text-white">CONCEVOIR</span>
+            <span class="block text-hive-muted">AUTREMENT.</span>
+          </h1>
+
+          <p class="hero-subtitle text-base sm:text-lg text-hive-muted max-w-2xl mx-auto font-light leading-relaxed">
+            Plus de 36 projets conçus au Gabon, de la villa au quai maritime. Architectes, ingénieurs et techniciens unis pour concrétiser vos ouvrages de la faisabilité à la livraison.
+          </p>
+
+          <div class="mt-8 flex flex-wrap justify-center gap-4">
+            <a href="#sec-simulateur" class="px-6 py-3 rounded-xl bg-white text-hive-bg font-title font-bold text-xs uppercase tracking-wider hover:bg-hive-muted transition-all">
+              Simuler votre budget prévisionnel
+            </a>
+            <a href="https://wa.me/241077219469?text=Bonjour%20THE%20HIVE%2C%20je%20souhaite%20obtenir%20une%20estimation%20pour%20mon%20projet%20BTP." target="_blank" rel="noopener" class="px-6 py-3 rounded-xl border border-hive-line bg-hive-bgCard text-white font-mono text-xs uppercase tracking-wider hover:bg-hive-bgHover transition-all flex items-center gap-2">
+              <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-1.157 4.228 4.305-1.129z"/></svg>
+              Contact Direct WhatsApp
+            </a>
+          </div>
+        </div>
+
+        <!-- Honeycomb Interactive Grid -->
+        <div class="honey-reveal my-10">
+          <div class="honeycomb" id="honey" role="group" aria-label="Filtrer les projets par catégorie"></div>
+        </div>
+
+        <!-- Stats Counter Grid -->
+        <div class="hero-stats-grid grid grid-cols-2 sm:grid-cols-4 gap-4 w-full max-w-4xl mx-auto">
+          <div class="p-4 rounded-xl bg-hive-bgCard border border-hive-line text-center">
+            <b class="stat-num text-3xl font-title font-bold text-white block" data-target="2022">0</b>
+            <span class="text-xs text-hive-muted uppercase tracking-wider font-mono">Année de création</span>
+          </div>
+          <div class="p-4 rounded-xl bg-hive-bgCard border border-hive-line text-center">
+            <b class="stat-num text-3xl font-title font-bold text-white block" data-target="10">0</b>
+            <span class="text-xs text-hive-muted uppercase tracking-wider font-mono">Collaborateurs</span>
+          </div>
+          <div class="p-4 rounded-xl bg-hive-bgCard border border-hive-line text-center">
+            <b class="stat-num text-3xl font-title font-bold text-white block" data-target="4">0</b>
+            <span class="text-xs text-hive-muted uppercase tracking-wider font-mono">Partenaires clés</span>
+          </div>
+          <div class="p-4 rounded-xl bg-hive-bgCard border border-hive-line text-center">
+            <b class="stat-num text-3xl font-title font-bold text-white block" id="stat-projets" data-target="37">37</b>
+            <span class="text-xs text-hive-muted uppercase tracking-wider font-mono">Projets conçus</span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==========================================
+         SECTION 02: ESTIMATEUR DE COÛT / SIMULATEUR DE BUDGET
+         ========================================== -->
+    <section id="sec-simulateur" class="relative py-24 bg-hive-bg border-t border-hive-line">
+      <div class="max-w-7xl mx-auto px-6">
+        
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+          <div>
+            <div class="font-mono text-xs text-hive-muted tracking-widest uppercase mb-2">SECTION 02 // SIMULATEUR</div>
+            <h2 class="text-3xl sm:text-5xl font-title font-bold uppercase tracking-tight text-white">Estimateur de Coût de Construction</h2>
+          </div>
+          <p class="text-sm text-hive-muted max-w-md font-light">
+            Calculez instantanément le budget prévisionnel global de votre projet au Gabon avec décomposition des postes et possibilité d'envoi direct sur WhatsApp.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+          
+          <!-- Paramètres du projet -->
+          <div class="lg:col-span-7 p-8 rounded-3xl bg-hive-bgCard border border-hive-line space-y-6">
+            <h3 class="text-xl font-title font-bold text-white border-b border-hive-line pb-4 flex items-center justify-between">
+              <span>1. Paramètres de l'Ouvrage</span>
+              <span class="font-mono text-xs text-hive-muted font-normal">Devise : FCFA</span>
+            </h3>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label for="sim-type" class="block font-mono text-xs uppercase text-hive-muted mb-2">Type de Bâtiment</label>
+                <select id="sim-type" class="w-full px-4 py-3 rounded-xl bg-hive-bg border border-hive-line text-sm text-white focus:outline-none focus:border-white transition-colors">
+                  <option value="Villa & Maison Résidentielle">Villa & Maison Résidentielle</option>
+                  <option value="Immeuble Résidentiel R+">Immeuble Résidentiel (Appartements)</option>
+                  <option value="Bâtiment Commercial & Tertiaire">Bâtiment Commercial & Tertiaire</option>
+                  <option value="Équipement Public & Institutionnel">Équipement Public & Institutionnel</option>
+                </select>
+              </div>
+
+              <div>
+                <label for="sim-profile" class="block font-mono text-xs uppercase text-hive-muted mb-2">Profil du maître d’ouvrage</label>
+                <select id="sim-profile" class="w-full px-4 py-3 rounded-xl bg-hive-bg border border-hive-line text-sm text-white focus:outline-none focus:border-white transition-colors">
+                  <option value="student">Étudiant</option>
+                  <option value="young-worker">Jeune travailleur</option>
+                  <option value="nonprofit">Association à but non lucratif</option>
+                  <option value="family" selected>Particulier / Famille</option>
+                  <option value="investor">Investisseur</option>
+                  <option value="company">Entreprise</option>
+                </select>
+                <p class="text-[11px] text-hive-muted mt-1 font-mono">Coefficient provisoire appliqué : <span id="sim-coefficient">1,00×</span>. Coefficients par profil à valider par THE HIVE.</p>
+              </div>
+
+              <div>
+                <label for="sim-surface" class="block font-mono text-xs uppercase text-hive-muted mb-2">Surface à Construire (m²)</label>
+                <input id="sim-surface" type="number" min="1" max="10000" value="180" class="w-full px-4 py-3 rounded-xl bg-hive-bg border border-hive-line text-sm text-white focus:outline-none focus:border-white transition-colors">
+              </div>
+            </div>
+
+            <div>
+              <div class="flex justify-between items-center mb-2">
+                <label for="sim-price" class="font-mono text-xs uppercase text-hive-muted">Prix de base saisi par vos soins (FCFA / m²)</label>
+                <span id="sim-price-val" class="font-mono text-xs text-white font-bold">À définir</span>
+              </div>
+              <input id="sim-price" type="range" min="0" max="2000000" step="10000" value="0" class="w-full accent-white bg-hive-bg rounded-lg cursor-pointer h-2">
+              <p class="text-[11px] text-hive-muted mt-1 font-mono">Aucun tarif local n’est prérempli. Définissez le prix selon votre devis ou barème validé.</p>
+            </div>
+
+            <div class="border-t border-hive-line pt-4 space-y-3">
+              <h4 class="font-mono text-xs uppercase text-hive-muted">Programme de pièces</h4>
+              <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                <div>
+                  <label for="room-bedrooms" class="block text-xs text-hive-muted mb-1">Chambres</label>
+                  <input id="room-bedrooms" type="number" min="0" max="30" value="3" class="w-full px-3 py-2 rounded-lg bg-hive-bg border border-hive-line text-sm text-white">
+                </div>
+                <div>
+                  <label for="room-bathrooms" class="block text-xs text-hive-muted mb-1">Salles de bain</label>
+                  <input id="room-bathrooms" type="number" min="0" max="20" value="2" class="w-full px-3 py-2 rounded-lg bg-hive-bg border border-hive-line text-sm text-white">
+                </div>
+                <div>
+                  <label for="room-roof" class="block text-xs text-hive-muted mb-1">Toiture</label>
+                  <select id="room-roof" class="w-full px-3 py-2 rounded-lg bg-hive-bg border border-hive-line text-sm text-white">
+                    <option>Toiture plate</option>
+                    <option>Dalle béton / terrasse</option>
+                    <option>Bac acier</option>
+                  </select>
+                </div>
+                <div>
+                  <label for="room-kitchen" class="block text-xs text-hive-muted mb-1">Cuisine</label>
+                  <select id="room-kitchen" class="w-full px-3 py-2 rounded-lg bg-hive-bg border border-hive-line text-sm text-white">
+                    <option>Cuisine ouverte</option>
+                    <option>Cuisine fermée</option>
+                  </select>
+                </div>
+                <div>
+                  <label for="room-parking" class="block text-xs text-hive-muted mb-1">Stationnement</label>
+                  <select id="room-parking" class="w-full px-3 py-2 rounded-lg bg-hive-bg border border-hive-line text-sm text-white">
+                    <option>Aucun</option>
+                    <option>Garage</option>
+                    <option>Carport</option>
+                  </select>
+                </div>
+              </div>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                <label class="flex items-center gap-2 p-3 rounded-lg bg-hive-bg border border-hive-line"><input id="room-living" type="checkbox" checked class="accent-white"> Séjour</label>
+                <label class="flex items-center gap-2 p-3 rounded-lg bg-hive-bg border border-hive-line"><input id="room-dining" type="checkbox" checked class="accent-white"> Salle à manger séparée (SAM)</label>
+                <label class="flex items-center gap-2 p-3 rounded-lg bg-hive-bg border border-hive-line"><input id="room-storage" type="checkbox" class="accent-white"> Dressing / placards</label>
+                <label class="flex items-center gap-2 p-3 rounded-lg bg-hive-bg border border-hive-line"><input id="room-laundry" type="checkbox" class="accent-white"> Buanderie / cellier</label>
+              </div>
+            </div>
+
+            <div class="border-t border-hive-line pt-4 space-y-3">
+              <span class="block font-mono text-xs uppercase text-hive-muted mb-2">Prestations Annexes & Provisions (Optionnel)</span>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <label class="text-xs text-hive-muted" data-cost-label="terrain">Préparation du terrain (%)
+                  <input id="opt-terrain" type="number" min="0" max="100" step="0.5" value="0" class="mt-1 w-full px-3 py-2 rounded-lg bg-hive-bg border border-hive-line text-white">
+                </label>
+                <label class="text-xs text-hive-muted" data-cost-label="studies">Études & honoraires (%)
+                  <input id="opt-etudes" type="number" min="0" max="100" step="0.5" value="0" class="mt-1 w-full px-3 py-2 rounded-lg bg-hive-bg border border-hive-line text-white">
+                </label>
+                <label class="text-xs text-hive-muted" data-cost-label="plans">Plans architecturaux et techniques (%)
+                  <input id="opt-plans" type="number" min="0" max="100" step="0.5" value="0" class="mt-1 w-full px-3 py-2 rounded-lg bg-hive-bg border border-hive-line text-white">
+                </label>
+                <label class="text-xs text-hive-muted" data-cost-label="amenities">Aménagements extérieurs (%)
+                  <input id="opt-aménagements" type="number" min="0" max="100" step="0.5" value="0" class="mt-1 w-full px-3 py-2 rounded-lg bg-hive-bg border border-hive-line text-white">
+                </label>
+                <label class="text-xs text-hive-muted" data-cost-label="contingency">Provision pour imprévus (%)
+                  <input id="opt-imprévus" type="number" min="0" max="100" step="0.5" value="0" class="mt-1 w-full px-3 py-2 rounded-lg bg-hive-bg border border-hive-line text-white">
+                </label>
+              </div>
+              <p class="text-[11px] text-hive-muted font-mono">Les taux des plans et autres postes sont à saisir selon les devis validés ; aucun pourcentage local n’est présumé.</p>
+            </div>
+          </div>
+
+          <!-- Résultat du Calcul & Synthèse -->
+          <div class="lg:col-span-5 p-8 rounded-3xl bg-hive-bgCard border border-hive-line glow-border space-y-6">
+            <h3 class="text-xl font-title font-bold text-white border-b border-hive-line pb-4 flex items-center justify-between">
+              <span>2. Budget Prévisionnel</span>
+              <span class="w-2.5 h-2.5 rounded-full bg-hive-muted animate-pulse"></span>
+            </h3>
+
+            <div class="p-6 rounded-2xl bg-hive-bg border border-hive-line text-center">
+              <span class="font-mono text-xs uppercase text-hive-muted block mb-1">Budget Global Estimé</span>
+              <b id="res-total" class="text-3xl sm:text-4xl font-title font-extrabold text-white block">0 FCFA</b>
+              <span class="text-[11px] text-hive-muted font-mono mt-1 block">Estimation indicative, hors taxes non renseignées</span>
+            </div>
+
+            <!-- Ventilation des Postes -->
+            <div class="space-y-3 font-mono text-xs">
+              <div class="flex justify-between items-center p-3 rounded-xl bg-hive-bg border border-hive-line">
+                <span class="text-hive-muted">Gros-Œuvre & Construction :</span>
+                <strong id="res-construction" class="text-white">0 FCFA</strong>
+              </div>
+
+              <div class="flex justify-between items-center p-3 rounded-xl bg-hive-bg border border-hive-line">
+                <span class="text-hive-muted">Préparation Terrain :</span>
+                <strong id="res-terrain" class="text-white">0 FCFA</strong>
+              </div>
+
+              <div class="flex justify-between items-center p-3 rounded-xl bg-hive-bg border border-hive-line">
+                <span class="text-hive-muted">Études & Honoraires :</span>
+                <strong id="res-etudes" class="text-white">0 FCFA</strong>
+              </div>
+
+              <div class="flex justify-between items-center p-3 rounded-xl bg-hive-bg border border-hive-line">
+                <span class="text-hive-muted">Plans architecturaux & techniques :</span>
+                <strong id="res-plans" class="text-white">0 FCFA</strong>
+              </div>
+
+              <div class="flex justify-between items-center p-3 rounded-xl bg-hive-bg border border-hive-line">
+                <span class="text-hive-muted">Aménagements :</span>
+                <strong id="res-amenagements" class="text-white">0 FCFA</strong>
+              </div>
+
+              <div class="flex justify-between items-center p-3 rounded-xl bg-hive-bg border border-hive-line">
+                <span class="text-hive-muted">Provision Imprévus :</span>
+                <strong id="res-imprevus" class="text-white">0 FCFA</strong>
+              </div>
+            </div>
+
+            <!-- Jauge visuelle de ventilation -->
+            <div>
+              <div class="flex justify-between text-[10px] font-mono text-hive-muted mb-1">
+                <span>Construction (Gros-œuvre)</span>
+                <span>Annexes & Honoraires</span>
+              </div>
+              <div class="w-full h-2.5 rounded-full bg-hive-bg overflow-hidden flex border border-hive-line">
+                <div id="bar-const" class="bg-white h-full transition-all duration-300" style="width: 0%;"></div>
+                <div id="bar-annex" class="bg-hive-muted h-full transition-all duration-300" style="width: 0%;"></div>
+              </div>
+            </div>
+
+            <!-- Envoi WhatsApp avec résultat -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <button type="button" id="btn-sim-wa" class="w-full py-4 rounded-xl bg-white text-hive-bg font-title font-bold text-xs uppercase tracking-wider hover:bg-hive-muted transition-all flex items-center justify-center gap-2 shadow-xl">
+              <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-1.157 4.228 4.305-1.129z"/></svg>
+              Transmettre cette estimation sur WhatsApp
+            </button>
+            <button type="button" id="btn-sim-print" class="w-full py-4 rounded-xl border border-hive-line text-white font-title font-bold text-xs uppercase tracking-wider hover:bg-white hover:text-hive-bg transition-all">
+              Exporter en PDF / Imprimer
+            </button>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+      <section id="budget-print-sheet" aria-hidden="true"></section>
+    </section>
+
+    <!-- ==========================================
+         SECTION 03: PRESTATIONS
+         ========================================== -->
+    <section id="sec-services" class="relative py-24 bg-hive-bg border-t border-hive-line">
+      <div class="max-w-7xl mx-auto px-6">
+        <div class="max-w-3xl mb-12">
+          <div class="font-mono text-xs text-hive-muted tracking-widest uppercase mb-2">SECTION 03 // NOTRE SAVOIR-FAIRE</div>
+          <h2 class="text-3xl sm:text-5xl font-title font-bold uppercase tracking-tight text-white mb-5">Nos prestations</h2>
+          <p class="services-summary text-base sm:text-lg text-hive-muted font-light leading-relaxed">
+            THE HIVE accompagne vos projets résidentiels, commerciaux et institutionnels, de l’idée initiale à la réalisation finale.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <article class="p-6 rounded-2xl bg-hive-bgCard border border-hive-line">
+            <span class="font-mono text-xs text-hive-muted">01</span>
+            <h3 class="mt-4 font-title font-bold text-white">Conception architecturale</h3>
+            <p class="mt-2 text-sm text-hive-muted">Conception architecturale et études de faisabilité.</p>
+          </article>
+          <article class="p-6 rounded-2xl bg-hive-bgCard border border-hive-line">
+            <span class="font-mono text-xs text-hive-muted">02</span>
+            <h3 class="mt-4 font-title font-bold text-white">Études techniques</h3>
+            <p class="mt-2 text-sm text-hive-muted">Plans, études techniques et dossiers d’exécution.</p>
+          </article>
+          <article class="p-6 rounded-2xl bg-hive-bgCard border border-hive-line">
+            <span class="font-mono text-xs text-hive-muted">03</span>
+            <h3 class="mt-4 font-title font-bold text-white">Visualisations 3D</h3>
+            <p class="mt-2 text-sm text-hive-muted">Rendus 3D immersifs et visualisations de projets.</p>
+          </article>
+          <article class="p-6 rounded-2xl bg-hive-bgCard border border-hive-line">
+            <span class="font-mono text-xs text-hive-muted">04</span>
+            <h3 class="mt-4 font-title font-bold text-white">Architecture intérieure</h3>
+            <p class="mt-2 text-sm text-hive-muted">Architecture intérieure et choix des matériaux.</p>
+          </article>
+          <article class="p-6 rounded-2xl bg-hive-bgCard border border-hive-line">
+            <span class="font-mono text-xs text-hive-muted">05</span>
+            <h3 class="mt-4 font-title font-bold text-white">Conception durable</h3>
+            <p class="mt-2 text-sm text-hive-muted">Conception bioclimatique et construction durable.</p>
+          </article>
+          <article class="p-6 rounded-2xl bg-hive-bgCard border border-hive-line">
+            <span class="font-mono text-xs text-hive-muted">06</span>
+            <h3 class="mt-4 font-title font-bold text-white">Suivi de chantier</h3>
+            <p class="mt-2 text-sm text-hive-muted">Suivi de chantier et accompagnement des maîtres d’ouvrage.</p>
+          </article>
+          <article class="p-6 rounded-2xl bg-hive-bgCard border border-hive-line">
+            <span class="font-mono text-xs text-hive-muted">07</span>
+            <h3 class="mt-4 font-title font-bold text-white">Rénovation & réhabilitation</h3>
+            <p class="mt-2 text-sm text-hive-muted">Rénovation, extension et réhabilitation.</p>
+          </article>
+          <article class="p-6 rounded-2xl bg-hive-bgCard border border-hive-line">
+            <span class="font-mono text-xs text-hive-muted">08</span>
+            <h3 class="mt-4 font-title font-bold text-white">Études d’ingénierie</h3>
+            <p class="mt-2 text-sm text-hive-muted">Études VRD, structures et installations techniques.</p>
+          </article>
+          <article class="p-6 rounded-2xl bg-hive-bgCard border border-hive-line">
+            <span class="font-mono text-xs text-hive-muted">09</span>
+            <h3 class="mt-4 font-title font-bold text-white">Appels d’offres</h3>
+            <p class="mt-2 text-sm text-hive-muted">Conception des dossiers et accompagnement dans la réponse aux appels d’offres.</p>
+          </article>
+          <article class="p-6 rounded-2xl bg-hive-bgCard border border-hive-line">
+            <span class="font-mono text-xs text-hive-muted">10</span>
+            <h3 class="mt-4 font-title font-bold text-white">Cahiers des charges & consultation</h3>
+            <p class="mt-2 text-sm text-hive-muted">Conception des cahiers des charges et des documents de consultation des entreprises.</p>
+          </article>
+        </div>
+
+        <div class="mt-10 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5 p-6 sm:p-8 rounded-2xl border border-hive-line bg-hive-bgCard">
+          <p class="text-sm sm:text-base text-white font-light leading-relaxed">
+            De l’idée initiale à la réalisation finale.
+            <span class="block mt-2 font-mono text-xs text-hive-muted">#ConcevoirAutrement</span>
+          </p>
+          <a href="https://wa.me/241077219469?text=Bonjour%20THE%20HIVE%2C%20je%20souhaite%20discuter%20de%20vos%20prestations." target="_blank" rel="noopener" class="shrink-0 inline-flex justify-center px-5 py-3 rounded-xl bg-white text-hive-bg font-title font-bold text-xs uppercase tracking-wider hover:bg-hive-muted transition-all">
+            Parler de mon projet
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         SECTION 04: PORTFOLIO DE PROJETS & RECHERCHE
+         ========================================== -->
+    <section id="sec-projets" class="relative py-24 bg-hive-bg border-t border-hive-line">
+      <div class="max-w-7xl mx-auto px-6">
+        
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+          <div>
+            <div class="font-mono text-xs text-hive-muted tracking-widest uppercase mb-2">SECTION 04 // RÉALISATIONS</div>
+            <h2 class="text-3xl sm:text-5xl font-title font-bold uppercase tracking-tight text-white">Nos Projets Conçus</h2>
+          </div>
+
+          <div class="w-full md:w-auto flex flex-col sm:flex-row gap-3">
+          <div class="w-full md:w-80">
+            <label for="q" class="sr-only">Rechercher un projet</label>
+            <input id="q" type="search" placeholder="Rechercher : villa, Mouila, Ntoum..." autocomplete="off" class="w-full px-4 py-2.5 rounded-xl bg-hive-bgCard border border-hive-line text-sm text-white focus:outline-none focus:border-white transition-colors">
+          </div>
+          <a href="https://wa.me/241077219469?text=Bonjour%20THE%20HIVE%2C%20je%20souhaite%20discuter%20de%20vos%20projets." target="_blank" rel="noopener" class="inline-flex items-center justify-center px-4 py-2.5 rounded-xl border border-hive-line text-white font-mono text-xs uppercase hover:bg-white hover:text-hive-bg transition-colors">Parler de mon projet</a>
+          </div>
+        </div>
+
+        <p class="font-mono text-xs text-hive-muted mb-2" id="count" aria-live="polite"></p>
+        <button type="button" id="clear-city-filter" class="hidden mb-4 px-3 py-2 rounded-lg border border-hive-line text-hive-muted text-xs hover:text-white hover:border-white">Effacer le filtre géographique</button>
+        <p class="font-mono text-xs text-hive-muted mb-6">Découvrez une sélection d’images de projets. L’ajout de photos complémentaires est réservé à l’administration.</p>
+        
+        <!-- Projects Grid -->
+        <div id="list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+
+        <div class="mt-12 text-center">
+          <button type="button" id="more" class="px-6 py-3 rounded-xl border border-white text-white font-mono text-xs uppercase tracking-wider hover:bg-white hover:text-hive-bg transition-all hidden">
+            Voir plus de projets
+          </button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==========================================
+         SECTION 05: ORGANIGRAMME & PARTENAIRES MARQUEE
+         ========================================== -->
+    <section id="sec-equipe" class="relative py-24 bg-hive-bg border-t border-hive-line overflow-hidden">
+      <div class="max-w-7xl mx-auto px-6">
+        
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">
+          <div>
+            <div class="font-mono text-xs text-hive-muted tracking-widest uppercase mb-2">SECTION 05 // ORGANISATION</div>
+            <h2 class="text-3xl sm:text-5xl font-title font-bold uppercase tracking-tight text-white">Équipe & Partenaires</h2>
+          </div>
+        </div>
+
+        <!-- Organigramme & Personnel -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start mb-20">
+          <div class="p-8 rounded-2xl bg-hive-bgCard border border-hive-line">
+            <h3 class="text-lg font-title font-bold mb-6 text-white uppercase tracking-wider font-mono">Organigramme Institutionnel</h3>
+            <div class="space-y-6">
+              <div class="p-4 rounded-xl bg-white text-hive-bg font-title font-bold text-center text-base shadow-md">
+                Directeur Général
+              </div>
+              <div class="w-0.5 h-6 bg-hive-line mx-auto"></div>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="p-4 rounded-xl border border-hive-line bg-hive-bg text-xs space-y-2">
+                  <strong class="text-white font-title block text-sm">Direction Technique</strong>
+                  <ul class="text-hive-muted space-y-1 font-mono">
+                    <li>• Bureau d’Études Techniques</li>
+                    <li>• Bureau de Dessinateurs</li>
+                  </ul>
+                </div>
+                <div class="p-4 rounded-xl border border-hive-line bg-hive-bg text-xs space-y-2">
+                  <strong class="text-white font-title block text-sm">Direction Admin & Financière</strong>
+                  <ul class="text-hive-muted space-y-1 font-mono">
+                    <li>• Service Comptabilité</li>
+                    <li>• Service Marketing</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="space-y-6">
+            <h3 class="text-lg font-title font-bold text-white uppercase tracking-wider font-mono">Personnel d'Encadrement</h3>
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+              <div class="p-5 rounded-xl bg-hive-bgCard border border-hive-line text-center">
+                <b class="text-3xl font-title font-extrabold text-white block">1</b>
+                <span class="text-xs text-hive-muted font-mono">Directeur Général</span>
+              </div>
+              <div class="p-5 rounded-xl bg-hive-bgCard border border-hive-line text-center">
+                <b class="text-3xl font-title font-extrabold text-white block">2</b>
+                <span class="text-xs text-hive-muted font-mono">Ingénieurs Génie Civil</span>
+              </div>
+              <div class="p-5 rounded-xl bg-hive-bgCard border border-hive-line text-center">
+                <b class="text-3xl font-title font-extrabold text-white block">4</b>
+                <span class="text-xs text-hive-muted font-mono">Techniciens Supérieurs</span>
+              </div>
+              <div class="p-5 rounded-xl bg-hive-bgCard border border-hive-line text-center">
+                <b class="text-3xl font-title font-extrabold text-white block">1</b>
+                <span class="text-xs text-hive-muted font-mono">Contrôleur Technique</span>
+              </div>
+              <div class="p-5 rounded-xl bg-hive-bgCard border border-hive-line text-center sm:col-span-2">
+                <b class="text-3xl font-title font-extrabold text-white block">2</b>
+                <span class="text-xs text-hive-muted font-mono">Dessinateurs - Projeteurs</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Marquee Partenaires Vectoriels -->
+        <div class="border-t border-b border-hive-line py-8 overflow-hidden bg-hive-bgCard/50">
+          <div class="font-mono text-xs text-hive-muted uppercase tracking-widest text-center mb-6">NOS PARTENAIRES DE CONFIANCE</div>
+          <div class="marquee-track items-center" id="partner-track">
+            <div class="px-8 shrink-0">
+              <svg class="h-10 w-auto" viewBox="0 0 300 100">
+                <path d="M10 80 L10 20 L30 20 L30 80 Z" fill="#009A44"/>
+                <path d="M40 80 L40 40 L60 40 L60 80 Z" fill="#009A44"/>
+                <path d="M70 80 L70 10 L90 10 L90 80 Z" fill="#009A44"/>
+                <text x="110" y="50" fill="#FFFFFF" font-weight="bold" font-size="28" font-family="Bricolage Grotesque">MBIA</text>
+                <text x="110" y="75" fill="#777777" font-weight="bold" font-size="24" font-family="Bricolage Grotesque">WANÈ</text>
+              </svg>
+            </div>
+            <div class="px-8 shrink-0">
+              <svg class="h-10 w-auto" viewBox="0 0 260 100">
+                <rect x="10" y="10" width="80" height="80" fill="#0047FF"/>
+                <text x="22" y="62" fill="#FFFFFF" font-weight="900" font-size="30" font-family="Bricolage Grotesque">SWN</text>
+                <text x="100" y="55" fill="#0047FF" font-weight="bold" font-size="18" font-family="IBM Plex Sans">sawana services</text>
+              </svg>
+            </div>
+            <div class="px-8 shrink-0">
+              <svg class="h-10 w-auto" viewBox="0 0 200 100">
+                <circle cx="50" cy="50" r="35" fill="none" stroke="#009A44" stroke-width="5"/>
+                <text x="100" y="62" fill="#009A44" font-weight="800" font-size="32" font-family="Bricolage Grotesque">CETAF</text>
+              </svg>
+            </div>
+            <div class="px-8 shrink-0">
+              <svg class="h-10 w-auto" viewBox="0 0 220 100">
+                <rect x="5" y="20" width="210" height="60" fill="#000000" stroke="#FFFFFF" stroke-width="2" rx="6"/>
+                <text x="20" y="60" fill="#FFFFFF" font-weight="bold" font-size="26" font-family="Bricolage Grotesque">Aspro <tspan fill="#A0AAA5">Group</tspan></text>
+              </svg>
+            </div>
+
+            <!-- Duplication for infinite smooth loop -->
+            <div class="px-8 shrink-0">
+              <svg class="h-10 w-auto" viewBox="0 0 300 100">
+                <path d="M10 80 L10 20 L30 20 L30 80 Z" fill="#009A44"/>
+                <path d="M40 80 L40 40 L60 40 L60 80 Z" fill="#009A44"/>
+                <path d="M70 80 L70 10 L90 10 L90 80 Z" fill="#009A44"/>
+                <text x="110" y="50" fill="#FFFFFF" font-weight="bold" font-size="28" font-family="Bricolage Grotesque">MBIA</text>
+                <text x="110" y="75" fill="#777777" font-weight="bold" font-size="24" font-family="Bricolage Grotesque">WANÈ</text>
+              </svg>
+            </div>
+            <div class="px-8 shrink-0">
+              <svg class="h-10 w-auto" viewBox="0 0 260 100">
+                <rect x="10" y="10" width="80" height="80" fill="#0047FF"/>
+                <text x="22" y="62" fill="#FFFFFF" font-weight="900" font-size="30" font-family="Bricolage Grotesque">SWN</text>
+                <text x="100" y="55" fill="#0047FF" font-weight="bold" font-size="18" font-family="IBM Plex Sans">sawana services</text>
+              </svg>
+            </div>
+            <div class="px-8 shrink-0">
+              <svg class="h-10 w-auto" viewBox="0 0 200 100">
+                <circle cx="50" cy="50" r="35" fill="none" stroke="#009A44" stroke-width="5"/>
+                <text x="100" y="62" fill="#009A44" font-weight="800" font-size="32" font-family="Bricolage Grotesque">CETAF</text>
+              </svg>
+            </div>
+            <div class="px-8 shrink-0">
+              <svg class="h-10 w-auto" viewBox="0 0 220 100">
+                <rect x="5" y="20" width="210" height="60" fill="#000000" stroke="#FFFFFF" stroke-width="2" rx="6"/>
+                <text x="20" y="60" fill="#FFFFFF" font-weight="bold" font-size="26" font-family="Bricolage Grotesque">Aspro <tspan fill="#A0AAA5">Group</tspan></text>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==========================================
+         SECTION 06: GALERIE LIGHTBOX PHOTORÉALISTE
+         ========================================== -->
+    <section id="sec-galerie" class="relative py-24 bg-hive-bg border-t border-hive-line">
+      <div class="max-w-7xl mx-auto px-6">
+        
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+          <div>
+            <div class="font-mono text-xs text-hive-muted tracking-widest uppercase mb-2">SECTION 06 // GALERIE</div>
+            <h2 class="text-3xl sm:text-5xl font-title font-bold uppercase tracking-tight text-white">Visualisation 3D & Chantiers</h2>
+          </div>
+          <p class="text-sm text-hive-muted max-w-md font-light">
+            Cliquez sur un ouvrage pour ouvrir la vue modale plein écran.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" id="galerie-grid">
+          <!-- Item 1 -->
+          <div class="group relative rounded-2xl overflow-hidden bg-hive-bgCard border border-hive-line cursor-pointer aspect-video" onclick="openLightbox(0)">
+            <img src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800&q=80" alt="Villa Contemporaine 3D" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex items-end p-5">
+              <div>
+                <span class="font-mono text-[10px] uppercase text-white tracking-widest block mb-1">Architecture Residentielle</span>
+                <h4 class="font-title font-bold text-lg text-white">Villa Contemporaine & Pergolat</h4>
+              </div>
+            </div>
+          </div>
+
+          <!-- Item 2 -->
+          <div class="group relative rounded-2xl overflow-hidden bg-hive-bgCard border border-hive-line cursor-pointer aspect-video" onclick="openLightbox(1)">
+            <img src="https://images.unsplash.com/photo-1541888946425-d0fbb186a5b3?auto=format&fit=crop&w=800&q=80" alt="Structure Béton Armé" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex items-end p-5">
+              <div>
+                <span class="font-mono text-[10px] uppercase text-white tracking-widest block mb-1">Ingénierie BTP</span>
+                <h4 class="font-title font-bold text-lg text-white">Contrôle de Chantiers & Structure</h4>
+              </div>
+            </div>
+          </div>
+
+          <!-- Item 3 -->
+          <div class="group relative rounded-2xl overflow-hidden bg-hive-bgCard border border-hive-line cursor-pointer aspect-video" onclick="openLightbox(2)">
+            <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800&q=80" alt="Centre Commercial Mouila" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex items-end p-5">
+              <div>
+                <span class="font-mono text-[10px] uppercase text-white tracking-widest block mb-1">Tertiaire & Commerce</span>
+                <h4 class="font-title font-bold text-lg text-white">Centre Commercial — Mouila</h4>
+              </div>
+            </div>
+          </div>
+
+          <!-- Item 4 -->
+          <div class="group relative rounded-2xl overflow-hidden bg-hive-bgCard border border-hive-line cursor-pointer aspect-video" onclick="openLightbox(3)">
+            <img src="https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=800&q=80" alt="Maquette d'Ingénierie" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex items-end p-5">
+              <div>
+                <span class="font-mono text-[10px] uppercase text-white tracking-widest block mb-1">Études de Faisabilité</span>
+                <h4 class="font-title font-bold text-lg text-white">Planification Spatiale & BIM</h4>
+              </div>
+            </div>
+          </div>
+
+          <!-- Item 5 -->
+          <div class="group relative rounded-2xl overflow-hidden bg-hive-bgCard border border-hive-line cursor-pointer aspect-video" onclick="openLightbox(4)">
+            <img src="https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=800&q=80" alt="Aménagement Intérieur Ministère" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex items-end p-5">
+              <div>
+                <span class="font-mono text-[10px] uppercase text-white tracking-widest block mb-1">Réhabilitation Publique</span>
+                <h4 class="font-title font-bold text-lg text-white">Hall Ministère du Budget</h4>
+              </div>
+            </div>
+          </div>
+
+          <!-- Item 6 -->
+          <div class="group relative rounded-2xl overflow-hidden bg-hive-bgCard border border-hive-line cursor-pointer aspect-video" onclick="openLightbox(5)">
+            <img src="https://images.unsplash.com/photo-1545558014-8692077e9b5c?auto=format&fit=crop&w=800&q=80" alt="Quai Maritime Mouila" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex items-end p-5">
+              <div>
+                <span class="font-mono text-[10px] uppercase text-white tracking-widest block mb-1">Infrastructure Maritime</span>
+                <h4 class="font-title font-bold text-lg text-white">Quai Maritime — Cocobeach</h4>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Modale Lightbox -->
+    <div id="lightbox" class="fixed inset-0 z-50 bg-black/95 backdrop-blur-md flex items-center justify-center p-4 hidden">
+      <button onclick="closeLightbox()" class="absolute top-6 right-6 text-white text-3xl font-mono hover:text-hive-muted">&times;</button>
+      <button onclick="prevLightbox()" class="absolute left-6 text-white text-3xl font-mono hover:text-hive-muted p-2">&#8249;</button>
+      <button onclick="nextLightbox()" class="absolute right-6 text-white text-3xl font-mono hover:text-hive-muted p-2">&#8250;</button>
+      <div class="max-w-4xl max-h-[85vh] flex flex-col items-center">
+        <img id="lb-img" src="" alt="" class="max-h-[70vh] w-auto object-contain rounded-xl border border-hive-line mb-4">
+        <div class="text-center">
+          <span id="lb-cat" class="font-mono text-xs uppercase tracking-widest text-hive-muted block mb-1"></span>
+          <h3 id="lb-title" class="font-title font-bold text-xl text-white"></h3>
+        </div>
+      </div>
+    </div>
+
+    <div id="project-image-viewer" class="fixed inset-0 z-[60] bg-black/95 backdrop-blur-md flex items-center justify-center p-4 hidden" role="dialog" aria-modal="true" aria-label="Aperçu de la photo du projet">
+      <button type="button" id="close-project-image" class="absolute top-6 right-6 text-white text-3xl font-mono hover:text-hive-muted" aria-label="Fermer l’aperçu">&times;</button>
+      <img id="project-image-large" src="" alt="" class="max-h-[85vh] max-w-full object-contain rounded-xl border border-hive-line">
+    </div>
+
+    <!-- ==========================================
+         SECTION 07: MAILLAGE GABON & DEVIS DIRECT
+         ========================================== -->
+    <section id="sec-maillage" class="relative py-24 bg-hive-bg border-t border-hive-line">
+      <div class="max-w-7xl mx-auto px-6">
+        
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+          
+          <!-- Carte Vectorielle du Gabon -->
+          <div class="flex flex-col items-center text-center space-y-6">
+            <div class="font-mono text-xs text-hive-muted tracking-widest uppercase">SECTION 07 // IMPLANTATION</div>
+            <h2 class="text-3xl sm:text-5xl font-title font-bold uppercase tracking-tight text-white">Maillage Territorial</h2>
+            <p class="text-sm text-hive-muted max-w-md font-light">
+              Cliquez sur un pôle géographique de la carte du Gabon pour afficher nos réalisations géolocalisées.
+            </p>
+
+            <div class="relative w-full max-w-[460px] bg-hive-bgCard border border-hive-line p-6 rounded-2xl shadow-xl">
+              <svg class="w-full h-auto" viewBox="0 0 500 520">
+                <path class="gabon-shape" d="M 140,40 L 260,30 L 370,65 L 450,150 L 430,300 L 340,460 L 230,480 L 140,410 L 70,270 L 90,150 Z" />
+                
+                <line x1="120" y1="160" x2="160" y2="180" stroke="#FFFFFF" stroke-width="1.2" stroke-dasharray="3 3"/>
+                <line x1="120" y1="160" x2="220" y2="340" stroke="#FFFFFF" stroke-width="1.2" stroke-dasharray="3 3"/>
+                <line x1="120" y1="160" x2="380" y2="320" stroke="#FFFFFF" stroke-width="1.2" stroke-dasharray="3 3"/>
+
+                <!-- Pôles cliquables -->
+                <g class="city-node" transform="translate(120, 160)" onclick="selectCity('Libreville (Siège)', 'Ozangué, BP 7677 — Aménagement Hall du Budget, Hémicycle Assemblée Nationale, Centre Médical, Station de Lavage Moderne.', ['Libreville', 'Akanda', 'Owendo'])">
+                  <circle cx="0" cy="0" r="8" class="main-dot"/>
+                  <text x="14" y="4">Libreville</text>
+                </g>
+                <g class="city-node" transform="translate(160, 180)" onclick="selectCity('Ntoum & Bikélé', 'Logements Sociaux (Ntoum) et Logements Type F3 Duplex Jumelés (Bikélé) pour le compte de MBIA WANÈ.', ['Ntoum', 'Bikélé'])">
+                  <circle cx="0" cy="0" r="6" class="main-dot"/>
+                  <text x="12" y="4">Ntoum / Bikélé</text>
+                </g>
+                <g class="city-node" transform="translate(80, 260)" onclick="selectCity('Port-Gentil', 'Réhabilitation complète du Bâtiment Douanier pour LAMBDA BTP.', ['Port-Gentil'])">
+                  <circle cx="0" cy="0" r="7" class="main-dot"/>
+                  <text x="-65" y="4">Port-Gentil</text>
+                </g>
+                <g class="city-node" transform="translate(220, 340)" onclick="selectCity('Mouila & Cocobeach', 'Études et plans du Centre Commercial de Mouila, Études du Quai Maritime de Mouila/Cocobeach (TB GROUP).', ['Mouila', 'Cocobeach'])">
+                  <circle cx="0" cy="0" r="7" class="main-dot"/>
+                  <text x="14" y="4">Mouila</text>
+                </g>
+                <g class="city-node" transform="translate(270, 110)" onclick="selectCity('Mitzic', 'Logements F3 pour Médecins Cubains et Plans de la Bibliothèque de Mitzic.', ['Mitzic'])">
+                  <circle cx="0" cy="0" r="6" class="main-dot"/>
+                  <text x="12" y="4">Mitzic</text>
+                </g>
+                <g class="city-node" transform="translate(380, 320)" onclick="selectCity('Moanda & Franceville', 'Salle de Fête et Zone Commerciale à Moanda, Plan de Structure de la Bibliothèque de Franceville.', ['Moanda', 'Franceville'])">
+                  <circle cx="0" cy="0" r="7" class="main-dot"/>
+                  <text x="-120" y="18">Moanda / Franceville</text>
+                </g>
+              </svg>
+
+              <div id="city-info" class="mt-4 p-4 bg-hive-bg border-l-4 border-white rounded-lg text-xs font-mono text-left">
+                <span class="text-white font-bold block mb-1" id="city-title">Pôle Sélectionné</span>
+                <span class="text-hive-muted" id="city-desc">Cliquez sur une ville sur la carte du Gabon pour afficher nos réalisations.</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Formulaire de Devis Direct -->
+          <div id="devis" class="p-8 sm:p-10 rounded-3xl bg-hive-bgCard border border-hive-line glow-border">
+            <h3 class="text-2xl font-title font-bold mb-2 text-white">Demande de Devis Direct</h3>
+            <p class="text-sm text-hive-muted font-light mb-6">
+              Transmettez vos besoins à notre bureau d'études à Libreville.
+            </p>
+
+            <form id="qf" class="space-y-4" novalidate>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label for="f-nom" class="block font-mono text-xs uppercase tracking-wider text-hive-muted mb-1">Votre Nom *</label>
+                  <input id="f-nom" name="nom" required placeholder="Stéphane Akagah" class="w-full px-4 py-2.5 rounded-xl bg-hive-bg border border-hive-line text-sm text-white focus:outline-none focus:border-white transition-colors">
+                </div>
+                <div>
+                  <label for="f-contact" class="block font-mono text-xs uppercase tracking-wider text-hive-muted mb-1">Téléphone / WhatsApp *</label>
+                  <input id="f-contact" name="contact" required placeholder="+241 077219469" class="w-full px-4 py-2.5 rounded-xl bg-hive-bg border border-hive-line text-sm text-white focus:outline-none focus:border-white transition-colors">
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label for="f-type" class="block font-mono text-xs uppercase tracking-wider text-hive-muted mb-1">Type d'ouvrage</label>
+                  <select id="f-type" name="type" class="w-full px-4 py-2.5 rounded-xl bg-hive-bg border border-hive-line text-sm text-white focus:outline-none focus:border-white transition-colors">
+                    <option>Maison ou Villa moderne</option>
+                    <option>Logements Collectifs</option>
+                    <option>Commerce & Zone Commerciale</option>
+                    <option>Équipement Public</option>
+                    <option>Infrastructure & Quai</option>
+                    <option>Réhabilitation & Aménagement</option>
+                  </select>
+                </div>
+                <div>
+                  <label for="f-lieu" class="block font-mono text-xs uppercase tracking-wider text-hive-muted mb-1">Localisation *</label>
+                  <input id="f-lieu" name="lieu" required placeholder="Ex: Libreville, Ozangué" class="w-full px-4 py-2.5 rounded-xl bg-hive-bg border border-hive-line text-sm text-white focus:outline-none focus:border-white transition-colors">
+                </div>
+              </div>
+
+              <div>
+                <label for="f-besoin" class="block font-mono text-xs uppercase tracking-wider text-hive-muted mb-1">Descriptif du besoin *</label>
+                <textarea id="f-besoin" name="besoin" rows="3" required placeholder="Précisez votre demande (conception 3D, calcul de structure, suivi de chantier...)" class="w-full px-4 py-2.5 rounded-xl bg-hive-bg border border-hive-line text-sm text-white focus:outline-none focus:border-white transition-colors resize-none"></textarea>
+              </div>
+
+              <div class="flex flex-col sm:flex-row gap-3 pt-2">
+                <button type="button" id="send-wa" class="flex-1 py-3 rounded-xl bg-white text-hive-bg font-title font-bold text-xs uppercase tracking-wider hover:bg-hive-muted transition-colors shadow-lg">
+                  Envoyer sur WhatsApp
+                </button>
+                <button type="button" id="send-mail" class="flex-1 py-3 rounded-xl bg-white text-hive-bg font-title font-bold text-xs uppercase tracking-wider hover:bg-hive-muted transition-colors shadow-lg">
+                  Envoyer par E-mail
+                </button>
+              </div>
+
+              <p id="qs" class="text-xs font-mono text-hive-muted mt-2 text-center" role="status"></p>
+            </form>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <div id="admin-panel" class="fixed inset-0 z-[70] hidden overflow-y-auto bg-black/90 backdrop-blur-md p-4 sm:p-8" role="dialog" aria-modal="true" aria-labelledby="admin-title">
+    <div class="max-w-4xl mx-auto my-6 rounded-3xl bg-hive-bgCard border border-hive-line p-6 sm:p-8">
+      <div class="flex items-start justify-between gap-4 mb-6">
+        <div>
+          <p class="font-mono text-xs uppercase tracking-widest text-hive-muted mb-2" id="admin-mode-label">Administration locale</p>
+          <h2 id="admin-title" class="font-title font-bold text-2xl text-white">Modifier le site</h2>
+        </div>
+        <button type="button" id="close-admin" class="text-3xl text-white" aria-label="Fermer">&times;</button>
+      </div>
+
+      <p class="p-4 mb-6 rounded-xl border border-hive-line bg-hive-bg text-sm text-hive-muted">
+        <span id="admin-deployment-notice">Le CMS en ligne n’est pas encore configuré. Les changements resteront locaux à cet appareil jusqu’à la configuration de Supabase dans supabase-config.js. En mode local, le code d’accès ne protège pas les données contre une personne ayant accès à cet appareil.</span>
+      </p>
+
+      <form id="admin-login" class="space-y-4 max-w-xl">
+        <p id="admin-login-help" class="text-sm text-hive-muted"></p>
+        <div id="admin-email-field" class="hidden">
+          <label for="admin-email" class="block text-xs font-mono uppercase text-hive-muted">E-mail administrateur</label>
+          <input id="admin-email" type="email" autocomplete="username" class="w-full px-4 py-3 rounded-xl bg-hive-bg border border-hive-line text-white">
+        </div>
+        <label id="admin-password-label" for="admin-password" class="block text-xs font-mono uppercase text-hive-muted">Code d’accès local</label>
+        <input id="admin-password" type="password" minlength="8" autocomplete="current-password" required class="w-full px-4 py-3 rounded-xl bg-hive-bg border border-hive-line text-white">
+        <button id="admin-login-submit" type="submit" class="px-5 py-3 rounded-xl bg-white text-hive-bg font-title font-bold text-xs uppercase">Continuer</button>
+        <p id="admin-login-status" class="text-sm text-hive-muted" role="status"></p>
+      </form>
+
+      <div id="admin-editor" class="hidden space-y-8">
+        <section>
+          <h3 class="font-title text-lg font-bold text-white mb-2">Textes</h3>
+          <p class="text-xs text-hive-muted mb-4">Modifiez les champs nommés ci-dessous. Leurs identifiants restent stables même si leur position dans la page change.</p>
+          <div id="admin-copy-fields" class="grid grid-cols-1 md:grid-cols-2 gap-3"></div>
+          <button type="button" id="save-copy" class="mt-4 px-5 py-3 rounded-xl bg-white text-hive-bg font-title font-bold text-xs uppercase">Enregistrer les textes</button>
+        </section>
+
+        <section class="border-t border-hive-line pt-6">
+          <h3 class="font-title text-lg font-bold text-white mb-2">Images de la galerie</h3>
+          <div id="admin-gallery-fields" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+        </section>
+
+        <section class="border-t border-hive-line pt-6">
+          <h3 class="font-title text-lg font-bold text-white mb-2">Partenaires</h3>
+          <div id="admin-partner-fields" class="space-y-3"></div>
+          <div class="flex flex-col sm:flex-row gap-3 mt-4">
+            <input id="new-partner-name" type="text" maxlength="80" placeholder="Nom du partenaire" class="flex-1 px-4 py-3 rounded-xl bg-hive-bg border border-hive-line text-white">
+            <button type="button" id="add-partner" class="px-5 py-3 rounded-xl border border-hive-line text-white font-title font-bold text-xs uppercase">Ajouter un partenaire</button>
+          </div>
+        </section>
+
+        <section class="border-t border-hive-line pt-6">
+          <h3 class="font-title text-lg font-bold text-white mb-2">Paramètres de l’estimateur</h3>
+          <p class="text-xs text-hive-muted mb-4">Chaque poste peut être un pourcentage du coût des travaux ou un forfait FCFA. Les valeurs sont à valider par THE HIVE. Le programme des pièces décrit le besoin et ne modifie pas automatiquement la surface ni le coût.</p>
+          <div id="admin-estimator-fields" class="grid grid-cols-1 md:grid-cols-2 gap-3"></div>
+          <button type="button" id="save-estimator" class="mt-4 px-5 py-3 rounded-xl bg-white text-hive-bg font-title font-bold text-xs uppercase">Enregistrer l’estimateur</button>
+        </section>
+
+        <section class="border-t border-hive-line pt-6">
+          <h3 class="font-title text-lg font-bold text-white mb-2">Sauvegarde et transfert</h3>
+          <p class="text-xs text-hive-muted mb-4">Exportez ou importez les textes, paramètres et images de ce navigateur. En mode Supabase, les changements publiés sont partagés avec les visiteurs.</p>
+          <div class="flex flex-col sm:flex-row gap-3">
+            <button type="button" id="export-admin-data" class="px-5 py-3 rounded-xl border border-hive-line text-white font-title font-bold text-xs uppercase">Télécharger la sauvegarde</button>
+            <label class="px-5 py-3 rounded-xl border border-hive-line text-white font-title font-bold text-xs uppercase cursor-pointer text-center">Importer une sauvegarde
+              <input id="import-admin-data" type="file" accept="application/json,.json" class="hidden">
+            </label>
+          </div>
+        </section>
+
+        <div class="flex items-center justify-between border-t border-hive-line pt-5">
+          <p id="admin-status" class="text-sm text-hive-muted" role="status" aria-live="polite"></p>
+          <button type="button" id="admin-logout" class="px-4 py-2 rounded-lg border border-hive-line text-hive-muted text-xs uppercase">Verrouiller</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="border-t border-hive-line py-12 bg-hive-bgCard text-hive-ink">
+    <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 text-sm">
+      <div>
+        <div class="flex items-center gap-3 mb-3">
+          <img src="assets/brand/the-hive-logo.png" alt="Logo officiel THE HIVE" class="w-10 h-8 object-contain">
+          <span class="text-2xl font-title font-bold text-white">THE HIVE BTP</span>
+        </div>
+        <p class="text-hive-muted text-xs leading-relaxed mb-4">
+          Bureau d’études techniques en bâtiment et travaux publics. Concevoir autrement à Libreville et sur l'ensemble du territoire gabonais.
+        </p>
+        <p class="text-xs font-mono text-hive-muted">© 2026 THE HIVE. Tous droits réservés.</p>
+        <button type="button" id="open-admin-footer" class="mt-4 px-3 py-2 rounded-lg border border-hive-line text-hive-muted text-xs font-mono uppercase hover:border-white hover:text-white">Administration locale</button>
+      </div>
+
+      <div>
+        <h4 class="font-title font-bold text-white uppercase tracking-wider text-xs mb-3 font-mono">Coordonnées Officielle</h4>
+        <ul class="space-y-2 text-xs text-hive-muted font-mono">
+          <li>📍 BP 7677, Ozangué, Libreville, Gabon</li>
+          <li>📞 WhatsApp Pro : <a href="https://wa.me/241077219469" target="_blank" rel="noopener" class="text-white font-bold hover:underline">+241 077 21 94 69</a></li>
+          <li>📞 Standard : <a href="tel:+241065083769" class="hover:text-white">+241 065 08 37 69</a></li>
+          <li>✉️ E-mail : <a href="mailto:btphiveproject@gmail.com" class="hover:text-white">btphiveproject@gmail.com</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4 class="font-title font-bold text-white uppercase tracking-wider text-xs mb-3 font-mono">Réseaux & Contact Rapide</h4>
+        <div class="flex flex-wrap gap-3 text-xs font-mono">
+          <a href="https://wa.me/241077219469?text=Bonjour%20THE%20HIVE%2C%20je%20souhaite%20une%20assistance." target="_blank" rel="noopener" class="px-3.5 py-2 rounded-lg bg-hive-bg text-white border border-hive-line hover:bg-hive-bgHover transition-all flex items-center gap-2">
+            <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-1.157 4.228 4.305-1.129z"/></svg>
+            WhatsApp Direct (+241 077 21 94 69)
+          </a>
+          <a href="https://www.facebook.com/people/The-Hive-BTP/61573713868358/" target="_blank" rel="noopener" class="px-3 py-1.5 rounded-lg border border-hive-line hover:border-white">Facebook</a>
+          <a href="https://www.tiktok.com/@thehivebtp" target="_blank" rel="noopener" class="px-3 py-1.5 rounded-lg border border-hive-line hover:border-white">TikTok</a>
+          <a href="https://www.goafricaonline.com/ga/1202020-the-hive-batiment-travaux-publics-libreville-gabon" target="_blank" rel="noopener" class="px-3 py-1.5 rounded-lg border border-hive-line hover:border-white">GoAfricaOnline</a>
+        </div>
+      </div>
+    </div>
+    <details class="max-w-7xl mx-auto mt-8 px-6 text-xs text-hive-muted">
+      <summary class="cursor-pointer hover:text-white">Confidentialité — brouillon à valider</summary>
+      <div class="mt-3 max-w-3xl space-y-2">
+        <p><strong class="text-white">Brouillon non validé :</strong> THE HIVE doit confirmer l’identité du responsable du traitement, les coordonnées de contact, les durées de conservation et les modalités d’exercice des droits avant publication de cette notice.</p>
+        <p>Les données saisies dans le formulaire de devis restent dans votre navigateur jusqu’à l’ouverture de votre application e-mail ou WhatsApp. Si une mesure d’audience Google Analytics 4 est configurée, elle n’est activée qu’après votre accord. Vous pouvez refuser ou retirer cet accord depuis les préférences de confidentialité.</p>
+        <button type="button" id="privacy-preferences" class="underline hover:text-white">Gérer mes préférences de mesure d’audience</button>
+      </div>
+    </details>
+  </footer>
+
+  <aside id="analytics-consent" class="fixed bottom-4 left-4 right-4 z-[65] mx-auto max-w-2xl rounded-xl border border-hive-line bg-hive-bgCard p-5 shadow-2xl hidden" aria-label="Consentement à la mesure d’audience">
+    <p class="text-sm text-white">La mesure d’audience est facultative et ne sera activée qu’avec votre accord. Consultez la notice de confidentialité en brouillon à valider.</p>
+    <div class="mt-4 flex flex-wrap gap-3">
+      <button type="button" id="analytics-accept" class="rounded-lg bg-white px-4 py-2 text-xs font-bold text-hive-bg">Accepter</button>
+      <button type="button" id="analytics-decline" class="rounded-lg border border-hive-line px-4 py-2 text-xs text-white">Refuser</button>
+    </div>
+  </aside>
+
+  <!-- Application Logic JS -->
+  <script>
+    // --- SIMULATEUR DE BUDGET EN FCFA ---
+    var ADMIN_SETTINGS_KEY = "the-hive-admin-settings";
+    var ADMIN_PASSWORD_KEY = "the-hive-admin-password-hash";
+    var PROFILE_COEFFICIENT_DEFAULTS = {
+      student: 1,
+      "young-worker": 1,
+      nonprofit: 1,
+      family: 1,
+      investor: 1,
+      company: 1
+    };
+    var DEFAULT_PARTNERS = [
+      { id: "mbia-wane", name: "MBIA WANÈ" },
+      { id: "sawana-services", name: "Sawana Services" },
+      { id: "cetaf", name: "CETAF" },
+      { id: "aspro-group", name: "Aspro Group" }
+    ];
+    var DEFAULT_PARTNER_LOGOS = {
+      "mbia-wane": "assets/brand/partners/mbia-wane.jpg",
+      "sawana-services": "assets/brand/partners/sawana-services.jpg"
+    };
+    var siteSettings = loadSiteSettings();
+    var PROFILE_COEFFICIENTS = Object.assign({}, PROFILE_COEFFICIENT_DEFAULTS, siteSettings.coefficients || {});
+    var PROFILE_COST_RATES = Object.assign({ terrain: 0, studies: 0, plans: 0, amenities: 0, contingency: 0 }, siteSettings.rates || {});
+    var COST_ITEM_LABELS = {
+      terrain: "Préparation du terrain",
+      studies: "Études et honoraires",
+      plans: "Plans architecturaux et techniques",
+      amenities: "Aménagements extérieurs",
+      contingency: "Provision pour imprévus"
+    };
+    var PROFILE_COST_ITEMS = Object.assign({
+      terrain: { mode: "percent", value: PROFILE_COST_RATES.terrain * 100 },
+      studies: { mode: "percent", value: PROFILE_COST_RATES.studies * 100 },
+      plans: { mode: "percent", value: PROFILE_COST_RATES.plans * 100 },
+      amenities: { mode: "percent", value: PROFILE_COST_RATES.amenities * 100 },
+      contingency: { mode: "percent", value: PROFILE_COST_RATES.contingency * 100 }
+    }, siteSettings.costItems || {});
+    var sitePartners = Array.isArray(siteSettings.partners) ? siteSettings.partners : DEFAULT_PARTNERS.slice();
+
+    function loadSiteSettings() {
+      try {
+        var stored = localStorage.getItem(ADMIN_SETTINGS_KEY);
+        return stored ? JSON.parse(stored) : {};
+      } catch (error) {
+        console.error("Impossible de lire les paramètres enregistrés du site.", error);
+        return {};
+      }
+    }
+
+    function saveSiteSettings() {
+      localStorage.setItem(ADMIN_SETTINGS_KEY, JSON.stringify(siteSettings));
+    }
+
+    var HIVE_CONFIG = window.HIVE_CONFIG || {};
+    var supabaseClient = window.supabase && window.supabase.createClient &&
+      HIVE_CONFIG.supabaseUrl && HIVE_CONFIG.supabaseAnonKey
+      ? window.supabase.createClient(HIVE_CONFIG.supabaseUrl, HIVE_CONFIG.supabaseAnonKey)
+      : null;
+    var adminIsVerified = false;
+
+    function persistSiteSettings() {
+      saveSiteSettings();
+      if (!supabaseClient) return Promise.resolve();
+      return supabaseClient.from("site_content").upsert({
+        key: "main",
+        value: siteSettings,
+        updated_at: new Date().toISOString()
+      }).then(function(result) {
+        if (result.error) throw result.error;
+      });
+    }
+
+    function loadRemoteSiteSettings() {
+      if (!supabaseClient) return Promise.resolve();
+      return supabaseClient.from("site_content").select("value").eq("key", "main").maybeSingle().then(function(result) {
+        if (result.error) throw result.error;
+        if (!result.data) return;
+        siteSettings = Object.assign({}, siteSettings, result.data.value || {});
+        PROFILE_COEFFICIENTS = Object.assign({}, PROFILE_COEFFICIENT_DEFAULTS, siteSettings.coefficients || {});
+        PROFILE_COST_RATES = Object.assign({ terrain: 0, studies: 0, plans: 0, amenities: 0, contingency: 0 }, siteSettings.rates || {});
+        PROFILE_COST_ITEMS = Object.assign({
+          terrain: { mode: "percent", value: PROFILE_COST_RATES.terrain * 100 },
+          studies: { mode: "percent", value: PROFILE_COST_RATES.studies * 100 },
+          plans: { mode: "percent", value: PROFILE_COST_RATES.plans * 100 },
+          amenities: { mode: "percent", value: PROFILE_COST_RATES.amenities * 100 },
+          contingency: { mode: "percent", value: PROFILE_COST_RATES.contingency * 100 }
+        }, siteSettings.costItems || {});
+        sitePartners = Array.isArray(siteSettings.partners) ? siteSettings.partners : DEFAULT_PARTNERS.slice();
+        syncCostControls();
+      });
+    }
+
+    function verifySupabaseAdmin() {
+      if (!supabaseClient) return Promise.resolve(false);
+      return supabaseClient.auth.getUser().then(function(result) {
+        if (result.error) throw result.error;
+        if (!result.data.user) {
+          adminIsVerified = false;
+          return false;
+        }
+        return supabaseClient.from("hive_admins").select("user_id")
+          .eq("user_id", result.data.user.id).maybeSingle().then(function(membership) {
+            if (membership.error) throw membership.error;
+            adminIsVerified = !!membership.data;
+            return adminIsVerified;
+          });
+      });
+    }
+
+    if (supabaseClient) {
+      document.getElementById("admin-mode-label").textContent = "Administration sécurisée — Supabase";
+      document.getElementById("admin-deployment-notice").textContent =
+        "Connectez-vous avec un compte Supabase Auth inscrit comme administrateur. Les modifications autorisées sont partagées avec les visiteurs.";
+      document.getElementById("admin-login-help").textContent = "Connectez-vous avec votre adresse e-mail et votre mot de passe Supabase.";
+      document.getElementById("admin-email-field").classList.remove("hidden");
+      document.getElementById("admin-email").required = true;
+      document.getElementById("admin-password-label").textContent = "Mot de passe";
+      document.getElementById("admin-password").minLength = 1;
+    }
+
+    document.getElementById("opt-terrain").value = PROFILE_COST_RATES.terrain * 100;
+    document.getElementById("opt-etudes").value = PROFILE_COST_RATES.studies * 100;
+    document.getElementById("opt-plans").value = PROFILE_COST_RATES.plans * 100;
+    document.getElementById("opt-aménagements").value = PROFILE_COST_RATES.amenities * 100;
+    document.getElementById("opt-imprévus").value = PROFILE_COST_RATES.contingency * 100;
+    if (Number.isFinite(Number(siteSettings.priceM2))) document.getElementById("sim-price").value = siteSettings.priceM2;
+
+    var PROFILE_LABELS = {
+      student: "Étudiant",
+      "young-worker": "Jeune travailleur",
+      nonprofit: "Association à but non lucratif",
+      family: "Particulier / Famille",
+      investor: "Investisseur",
+      company: "Entreprise"
+    };
+
+    function trackEvent(name, parameters) {
+      if (localStorage.getItem("the-hive-analytics-consent") === "accepted" &&
+          typeof window.gtag === "function") window.gtag("event", name, parameters || {});
+    }
+
+    function loadGA4AfterConsent() {
+      var measurementId = HIVE_CONFIG.ga4MeasurementId;
+      if (!/^G-[A-Z0-9]+$/.test(measurementId || "")) return;
+      if (!window.dataLayer) {
+        window.dataLayer = [];
+        window.gtag = function() { window.dataLayer.push(arguments); };
+        window.gtag("js", new Date());
+        window.gtag("config", measurementId, { send_page_view: false });
+        var script = document.createElement("script");
+        script.async = true;
+        script.src = "https://www.googletagmanager.com/gtag/js?id=" + encodeURIComponent(measurementId);
+        document.head.appendChild(script);
+      }
+    }
+
+    function setAnalyticsConsent(accepted) {
+      localStorage.setItem("the-hive-analytics-consent", accepted ? "accepted" : "declined");
+      document.getElementById("analytics-consent").classList.add("hidden");
+      if (accepted) loadGA4AfterConsent();
+      else if (typeof window.gtag === "function") {
+        window.gtag("consent", "update", { analytics_storage: "denied" });
+        document.cookie.split(";").forEach(function(cookie) {
+          var name = cookie.split("=")[0].trim();
+          if (name.indexOf("_ga") === 0) document.cookie = name + "=; Max-Age=0; path=/";
+        });
+      }
+    }
+
+    if (/^G-[A-Z0-9]+$/.test(HIVE_CONFIG.ga4MeasurementId || "")) {
+      var analyticsConsent = localStorage.getItem("the-hive-analytics-consent");
+      if (analyticsConsent === "accepted") loadGA4AfterConsent();
+      else if (!analyticsConsent) document.getElementById("analytics-consent").classList.remove("hidden");
+    }
+    document.getElementById("analytics-accept").addEventListener("click", function() { setAnalyticsConsent(true); });
+    document.getElementById("analytics-decline").addEventListener("click", function() { setAnalyticsConsent(false); });
+    document.getElementById("privacy-preferences").addEventListener("click", function() {
+      document.getElementById("analytics-consent").classList.remove("hidden");
+    });
+
+    function fmtCFA(v) {
+      return new Intl.NumberFormat('fr-FR').format(Math.round(v)) + " FCFA";
+    }
+
+    function fmtPercent(rate) {
+      return (rate * 100).toLocaleString("fr-FR", { maximumFractionDigits: 2 });
+    }
+
+    function syncCostControls() {
+      Object.keys(COST_ITEM_LABELS).forEach(function(key) {
+        var item = PROFILE_COST_ITEMS[key] || { mode: "percent", value: 0 };
+        var input = document.getElementById("opt-" + (key === "studies" ? "etudes" : key === "amenities" ? "aménagements" : key === "contingency" ? "imprévus" : key));
+        var label = document.querySelector('[data-cost-label="' + key + '"]');
+        if (!input || !label) return;
+        input.value = Number(item.value) || 0;
+        input.max = item.mode === "flat" ? "2000000000" : "100";
+        input.step = item.mode === "flat" ? "10000" : "0.5";
+        label.firstChild.nodeValue = COST_ITEM_LABELS[key] + (item.mode === "flat" ? " (forfait FCFA)" : " (%)");
+      });
+    }
+
+    function costDescription(key) {
+      var item = PROFILE_COST_ITEMS[key] || { mode: "percent", value: 0 };
+      var inputId = "opt-" + (key === "studies" ? "etudes" : key === "amenities" ? "aménagements" : key === "contingency" ? "imprévus" : key);
+      var input = document.getElementById(inputId);
+      var value = input ? Math.max(0, Number(input.value) || 0) : Number(item.value) || 0;
+      return item.mode === "flat"
+        ? fmtCFA(value)
+        : fmtPercent(Math.min(100, value) / 100) + "%";
+    }
+
+    syncCostControls();
+
+    function getProjectProgram() {
+      var selected = function(id) { return document.getElementById(id); };
+      return {
+        bedrooms: Math.max(0, Number(selected("room-bedrooms").value) || 0),
+        bathrooms: Math.max(0, Number(selected("room-bathrooms").value) || 0),
+        living: selected("room-living").checked,
+        dining: selected("room-dining").checked,
+        kitchen: selected("room-kitchen").value,
+        storage: selected("room-storage").checked,
+        laundry: selected("room-laundry").checked,
+        parking: selected("room-parking").value,
+        roof: selected("room-roof").value
+      };
+    }
+
+    function describeProjectProgram(program) {
+      return [
+        program.bedrooms + " chambre(s)",
+        program.bathrooms + " salle(s) de bain",
+        program.living ? "séjour" : "",
+        program.dining ? "SAM séparée" : "",
+        program.kitchen,
+        program.storage ? "dressing / placards" : "",
+        program.laundry ? "buanderie / cellier" : "",
+        program.parking === "Aucun" ? "" : program.parking,
+        program.roof
+      ].filter(Boolean).join(", ");
+    }
+
+    function calculateBudget() {
+      var type = document.getElementById("sim-type").value;
+      var surf = parseFloat(document.getElementById("sim-surface").value) || 0;
+      var priceM2 = parseFloat(document.getElementById("sim-price").value) || 0;
+      var profile = document.getElementById("sim-profile").value;
+      var coefficient = Number.isFinite(PROFILE_COEFFICIENTS[profile]) ? PROFILE_COEFFICIENTS[profile] : 1;
+      var optionCost = function(key, id) {
+        var item = PROFILE_COST_ITEMS[key] || { mode: "percent", value: 0 };
+        var value = Math.max(0, parseFloat(document.getElementById(id).value) || 0);
+        return item.mode === "flat" ? value : costBase * Math.min(100, value) / 100;
+      };
+
+      document.getElementById("sim-price-val").textContent = priceM2 ? fmtCFA(priceM2) + " / m²" : "À définir";
+      document.getElementById("sim-coefficient").textContent = coefficient.toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + "×";
+
+      var effectivePriceM2 = priceM2 * coefficient;
+      var costBase = surf * effectivePriceM2;
+      var costTerrain = optionCost("terrain", "opt-terrain");
+      var costEtudes = optionCost("studies", "opt-etudes");
+      var costPlans = optionCost("plans", "opt-plans");
+      var costAmenag = optionCost("amenities", "opt-aménagements");
+      var costImprev = optionCost("contingency", "opt-imprévus");
+
+      var total = costBase + costTerrain + costEtudes + costPlans + costAmenag + costImprev;
+
+      document.getElementById("res-construction").textContent = fmtCFA(costBase);
+      document.getElementById("res-terrain").textContent = fmtCFA(costTerrain);
+      document.getElementById("res-etudes").textContent = fmtCFA(costEtudes);
+      document.getElementById("res-plans").textContent = fmtCFA(costPlans);
+      document.getElementById("res-amenagements").textContent = fmtCFA(costAmenag);
+      document.getElementById("res-imprevus").textContent = fmtCFA(costImprev);
+      document.getElementById("res-total").textContent = fmtCFA(total);
+
+      var pBase = total ? (costBase / total) * 100 : 0;
+      document.getElementById("bar-const").style.width = pBase + "%";
+      document.getElementById("bar-annex").style.width = (100 - pBase) + "%";
+
+      return {
+        type: type,
+        surf: surf,
+        priceM2: priceM2,
+        effectivePriceM2: effectivePriceM2,
+        profile: PROFILE_LABELS[profile],
+        coefficient: coefficient,
+        program: getProjectProgram(),
+        costs: { terrain: costTerrain, studies: costEtudes, plans: costPlans, amenities: costAmenag, contingency: costImprev },
+        costItems: PROFILE_COST_ITEMS,
+        base: costBase,
+        terrain: costTerrain,
+        etudes: costEtudes,
+        plans: costPlans,
+        amenag: costAmenag,
+        imprev: costImprev,
+        total: total
+      };
+    }
+
+    ["sim-type", "sim-profile", "sim-surface", "sim-price", "room-bedrooms", "room-bathrooms", "room-living", "room-dining", "room-kitchen", "room-storage", "room-laundry", "room-parking", "room-roof", "opt-terrain", "opt-etudes", "opt-plans", "opt-aménagements", "opt-imprévus"].forEach(function(id) {
+      var el = document.getElementById(id);
+      if (el) {
+        el.addEventListener("input", calculateBudget);
+        el.addEventListener("change", calculateBudget);
+      }
+    });
+
+    calculateBudget();
+
+    document.getElementById("btn-sim-wa").addEventListener("click", function() {
+      var b = calculateBudget();
+      var msg = "Bonjour THE HIVE,\n\nVoici les paramètres de mon estimation prévisionnelle :\n" +
+                "• Ouvrage : " + b.type + "\n" +
+                "• Profil : " + b.profile + " (coefficient " + b.coefficient + ")\n" +
+                "• Surface : " + b.surf + " m²\n" +
+                "• Prix de base saisi : " + fmtCFA(b.priceM2) + " / m²\n" +
+                "• Prix après coefficient : " + fmtCFA(b.effectivePriceM2) + " / m²\n" +
+                "• Programme : " + describeProjectProgram(b.program) + "\n" +
+                "-----------------------------------\n" +
+                "• Travaux : " + fmtCFA(b.base) + "\n" +
+                "• Préparation du terrain (" + costDescription("terrain") + ") : " + fmtCFA(b.terrain) + "\n" +
+                "• Études et honoraires (" + costDescription("studies") + ") : " + fmtCFA(b.etudes) + "\n" +
+                "• Plans architecturaux et techniques (" + costDescription("plans") + ") : " + fmtCFA(b.plans) + "\n" +
+                "• Aménagements extérieurs (" + costDescription("amenities") + ") : " + fmtCFA(b.amenag) + "\n" +
+                "• Imprévus (" + costDescription("contingency") + ") : " + fmtCFA(b.imprev) + "\n" +
+                "-----------------------------------\n" +
+                "TOTAL PRÉVISIONNEL : " + fmtCFA(b.total) + "\n\n" +
+                "Cette estimation est indicative. Merci de me recontacter pour valider le chiffrage.";
+
+      trackEvent("simulation_whatsapp", { event_category: "Engagement", event_label: b.type, value: b.total });
+      window.open("https://wa.me/241077219469?text=" + encodeURIComponent(msg), "_blank", "noopener");
+    });
+
+    document.getElementById("btn-sim-print").addEventListener("click", function() {
+      var b = calculateBudget();
+      var sheet = document.getElementById("budget-print-sheet");
+      var program = describeProjectProgram(b.program);
+      sheet.innerHTML = '<h1>THE HIVE — Synthèse budgétaire</h1>' +
+        '<p>Estimation indicative — à confirmer par devis professionnel.</p>' +
+        '<h2>Projet</h2><table><tbody>' +
+        '<tr><th>Ouvrage</th><td>' + b.type + '</td></tr>' +
+        '<tr><th>Maître d’ouvrage</th><td>' + b.profile + ' (coefficient ' + b.coefficient + ')</td></tr>' +
+        '<tr><th>Surface</th><td>' + b.surf + ' m²</td></tr>' +
+        '<tr><th>Programme de pièces</th><td>' + program + '</td></tr>' +
+        '<tr><th>Prix de base saisi</th><td>' + fmtCFA(b.priceM2) + ' / m²</td></tr>' +
+        '<tr><th>Prix après coefficient</th><td>' + fmtCFA(b.effectivePriceM2) + ' / m²</td></tr>' +
+        '</tbody></table><h2>Budget estimatif</h2><table><tbody>' +
+        '<tr><th>Travaux</th><td>' + fmtCFA(b.base) + '</td></tr>' +
+        '<tr><th>Préparation du terrain (' + costDescription("terrain") + ')</th><td>' + fmtCFA(b.terrain) + '</td></tr>' +
+        '<tr><th>Études et honoraires (' + costDescription("studies") + ')</th><td>' + fmtCFA(b.etudes) + '</td></tr>' +
+        '<tr><th>Plans architecturaux et techniques (' + costDescription("plans") + ')</th><td>' + fmtCFA(b.plans) + '</td></tr>' +
+        '<tr><th>Aménagements extérieurs (' + costDescription("amenities") + ')</th><td>' + fmtCFA(b.amenag) + '</td></tr>' +
+        '<tr><th>Provision pour imprévus (' + costDescription("contingency") + ')</th><td>' + fmtCFA(b.imprev) + '</td></tr>' +
+        '<tr><th>Total prévisionnel</th><td><strong>' + fmtCFA(b.total) + '</strong></td></tr>' +
+        '</tbody></table><p>Établi le ' + new Intl.DateTimeFormat("fr-FR").format(new Date()) + ' — THE HIVE BTP, Libreville.</p>';
+      sheet.setAttribute("aria-hidden", "false");
+      trackEvent("budget_pdf_print", { value: b.total, event_label: b.type });
+      window.print();
+      window.setTimeout(function() { sheet.setAttribute("aria-hidden", "true"); }, 1000);
+    });
+
+    // --- DATASET DES 37 PROJETS RÉELS ---
+    var CATS = [
+      {k:"all", l:"Tous", x:0, y:0},
+      {k:"log", l:"Logement", x:-90, y:-52},
+      {k:"com", l:"Commerce", x:0, y:-104},
+      {k:"equ", l:"Équipements", x:90, y:-52},
+      {k:"inf", l:"Infrastructure", x:90, y:52},
+      {k:"reh", l:"Aménagement", x:0, y:104},
+      {k:"ind", l:"Industriel", x:-90, y:52}
+    ];
+
+    var P = [
+      ["Logements sociaux", "Ntoum", "Plans architecturaux, plan de structure", "log", "MBIA WANÈ"],
+      ["Centre commercial", "Mouila", "Études, plans architecturaux", "com", "TB GROUP"],
+      ["Réhabilitation d’un centre médical", "Libreville", "Plan de structure", "reh", "TB GROUP"],
+      ["Établissement primaire", "Libreville", "Plans architecturaux", "equ", "TB GROUP"],
+      ["Salle de fête et zone commerciale", "Moanda", "Études, plans architecturaux", "com", "MBIA WANÈ"],
+      ["Logements F3 Médecins Cubains", "Mitzic", "Plans architecturaux", "log", "TB GROUP"],
+      ["Réalisation d'une Bibliothèque", "Mitzic / Franceville", "Plans architecturaux, plan de structure", "equ", "TB GROUP"],
+      ["Hall du Ministère du Budget", "Libreville", "Études, plans architecturaux", "reh", "TB GROUP"],
+      ["Réalisation d'un Arbre de Noël", "Libreville", "Modélisation 3D", "reh", "MBIA WANÈ"],
+      ["Station de lavage moderne", "Libreville", "Études, plans architecturaux", "com", "Client Privé"],
+      ["Hémicycle de l'Assemblée Nationale", "Libreville", "Modélisation 3D", "reh", "LAMBDA BTP"],
+      ["Logement F3 duplex jumelé", "Bikélé", "Plans architecturaux", "log", "MBIA WANÈ"],
+      ["Aménagement d'une salle de réunion", "Libreville", "Plans architecturaux", "reh", "MBIA WANÈ"],
+      ["Quai maritime", "Mouila / Cocobeach", "Études, plans architecturaux", "inf", "TB GROUP"],
+      ["Réhabilitation Bâtiment Douanier", "Port-Gentil", "Plans architecturaux", "reh", "LAMBDA BTP"],
+      ["Villa à étages n°1", "Libreville", "Étude & structure", "log", "Particulier"],
+      ["Villa à étages n°2", "Akanda", "Conception complète", "log", "Particulier"],
+      ["Villa moderne contemporaine", "Libreville", "Plans 2D/3D", "log", "Particulier"],
+      ["Villa moderne de plain-pied", "Owendo", "Génie civil", "log", "Particulier"],
+      ["Villa moderne à étages", "Libreville", "Structure béton armé", "log", "Particulier"],
+      ["Villa contemporaine de plain-pied", "Akanda", "Conception technique", "log", "Particulier"],
+      ["Villa sur terrain en pente", "Libreville", "Fondations spéciales", "log", "Particulier"],
+      ["Plan masse de villa", "Gabon", "Planification spatiale", "log", "Particulier"],
+      ["Maison de plain-pied avec pergola", "Ntoum", "Architecture", "log", "Particulier"],
+      ["Maison de plain-pied avec carport", "Libreville", "Structure", "log", "Particulier"],
+      ["Pavillon avec aménagements paysagers", "Akanda", "Conception paysagère", "log", "Particulier"],
+      ["Piscine et espaces extérieurs", "Libreville", "Ingénierie VRD", "log", "Particulier"],
+      ["Immeuble avec pharmacie", "Libreville", "Études mixtes", "com", "Client Privé"],
+      ["Complexe sportif et de loisirs", "Libreville", "Équipements", "equ", "Ville de Libreville"],
+      ["Abris de bus modernes", "Libreville", "Mobilier urbain", "equ", "Collectivité"],
+      ["Abris-poubelles normalisés", "Libreville", "Assainissement", "equ", "Collectivité"],
+      ["Passerelle piétonne de Bel Air", "Libreville", "Génie civil & Métal", "inf", "État"],
+      ["Portique de limitation de hauteur", "Gabon", "Ouvrage d'art", "inf", "Transport"],
+      ["Dalle de décontamination", "Gabon", "Industriel", "ind", "Industrie"],
+      ["Aménagement de sanitaires", "Libreville", "Second œuvre", "reh", "Public"],
+      ["Aménagement de cuisine professionnelle", "Libreville", "Second œuvre", "reh", "Tertiaire"],
+      ["Villa Lagoon Mirage", "Lambaréné", "Projet résidentiel", "log", ""]
+    ];
+
+    var PROJECT_STATIC_IMAGES = {
+      "Hall du Ministère du Budget": [
+        "assets/projects/ministere-budget/01.jpg",
+        "assets/projects/ministere-budget/02.jpg",
+        "assets/projects/ministere-budget/03.jpg",
+        "assets/projects/ministere-budget/04.jpg",
+        "assets/projects/ministere-budget/05.jpg"
+      ],
+      "Dalle de décontamination": [
+        "assets/projects/dalle-decontamination/01.jpg",
+        "assets/projects/dalle-decontamination/02.jpg",
+        "assets/projects/dalle-decontamination/03.jpg",
+        "assets/projects/dalle-decontamination/04.jpg",
+        "assets/projects/dalle-decontamination/05.jpg",
+        "assets/projects/dalle-decontamination/06.jpg"
+      ],
+      "Villa Lagoon Mirage": [
+        "assets/projects/villa-lagoon-mirage/01.jpg",
+        "assets/projects/villa-lagoon-mirage/02.jpg",
+        "assets/projects/villa-lagoon-mirage/03.jpg",
+        "assets/projects/villa-lagoon-mirage/04.jpg",
+        "assets/projects/villa-lagoon-mirage/05.jpg",
+        "assets/projects/villa-lagoon-mirage/06.jpg"
+      ]
+    };
+
+    var label = {};
+    CATS.forEach(function(c){ label[c.k] = c.l; });
+
+    var cur = "all", cityFilter = null, honey = document.getElementById("honey"), list = document.getElementById("list"), count = document.getElementById("count");
+    
+    function countCat(k) {
+      return k === "all" ? P.length : P.filter(function(p){ return p[3] === k; }).length;
+    }
+
+    CATS.forEach(function(c) {
+      var b = document.createElement("button");
+      b.className = "hex-btn";
+      b.type = "button";
+      b.dataset.k = c.k;
+      b.style.left = (108 + c.x) + "px";
+      b.style.top = (115 + c.y) + "px";
+      b.innerHTML = "<span>" + c.l + "<b>" + countCat(c.k) + "</b></span>";
+      b.addEventListener("click", function() {
+        cur = c.k;
+        show = LIM;
+        renderProjects();
+      });
+      honey.appendChild(b);
+    });
+
+    var LIM = 9, show = LIM, q = "", qraw = "", more = document.getElementById("more"), qi = document.getElementById("q");
+
+    function norm(t) {
+      return t.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    }
+
+    var IMAGE_DB_NAME = "the-hive-project-images";
+    var IMAGE_STORE_NAME = "project-images";
+    var SITE_ASSET_STORE_NAME = "site-assets";
+    var MAX_PROJECT_IMAGE_SIZE = 10 * 1024 * 1024;
+    var projectImageDBPromise = null;
+    var projectImageUrls = new Map();
+
+    function openProjectImageDB() {
+      if (!window.indexedDB) {
+        return Promise.reject(new Error("Le stockage des photos n’est pas disponible dans ce navigateur."));
+      }
+
+      if (!projectImageDBPromise) {
+        projectImageDBPromise = new Promise(function(resolve, reject) {
+          var request = window.indexedDB.open(IMAGE_DB_NAME, 2);
+          request.onupgradeneeded = function() {
+            var database = request.result;
+            if (!database.objectStoreNames.contains(IMAGE_STORE_NAME)) {
+              var store = database.createObjectStore(IMAGE_STORE_NAME, { keyPath: "id", autoIncrement: true });
+              store.createIndex("projectId", "projectId", { unique: false });
+            }
+            if (!database.objectStoreNames.contains(SITE_ASSET_STORE_NAME)) {
+              database.createObjectStore(SITE_ASSET_STORE_NAME, { keyPath: "id" });
+            }
+          };
+          request.onsuccess = function() { resolve(request.result); };
+          request.onerror = function() { reject(request.error || new Error("Impossible d’ouvrir le stockage des photos.")); };
+          request.onblocked = function() { reject(new Error("Le stockage des photos est bloqué par un autre onglet.")); };
+        });
+      }
+
+      return projectImageDBPromise;
+    }
+
+    function getProjectImages(projectId) {
+      if (supabaseClient) {
+        return supabaseClient.from("project_images").select("id,project_id,object_path,name,created_at")
+          .eq("project_id", projectId).order("created_at", { ascending: true })
+          .then(function(result) {
+            if (result.error) throw result.error;
+            return result.data.map(function(record) {
+              return Object.assign(record, {
+                publicUrl: supabaseClient.storage.from("site-assets").getPublicUrl(record.object_path).data.publicUrl
+              });
+            });
+          });
+      }
+      return openProjectImageDB().then(function(database) {
+        return new Promise(function(resolve, reject) {
+          var transaction = database.transaction(IMAGE_STORE_NAME, "readonly");
+          var request = transaction.objectStore(IMAGE_STORE_NAME).index("projectId").getAll(projectId);
+          request.onsuccess = function() {
+            resolve(request.result.sort(function(a, b) { return a.createdAt - b.createdAt; }));
+          };
+          request.onerror = function() { reject(request.error || new Error("Impossible de charger les photos du projet.")); };
+        });
+      });
+    }
+
+    function saveProjectImage(projectId, file) {
+      if (supabaseClient) {
+        var objectPath = "projects/" + projectId + "/" + Date.now() + "-" + file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
+        return supabaseClient.storage.from("site-assets").upload(objectPath, file, { upsert: false })
+          .then(function(upload) {
+            if (upload.error) throw upload.error;
+            return supabaseClient.from("project_images").insert({
+              project_id: projectId,
+              object_path: objectPath,
+              name: file.name
+            });
+          }).then(function(result) {
+            if (result.error) {
+              return supabaseClient.storage.from("site-assets").remove([objectPath]).then(function() {
+                throw result.error;
+              });
+            }
+          });
+      }
+      return openProjectImageDB().then(function(database) {
+        return new Promise(function(resolve, reject) {
+          var transaction = database.transaction(IMAGE_STORE_NAME, "readwrite");
+          transaction.objectStore(IMAGE_STORE_NAME).add({
+            projectId: projectId,
+            name: file.name,
+            type: file.type,
+            blob: file,
+            createdAt: Date.now()
+          });
+          transaction.oncomplete = resolve;
+          transaction.onerror = function() { reject(transaction.error || new Error("Impossible d’enregistrer la photo.")); };
+          transaction.onabort = function() { reject(transaction.error || new Error("L’enregistrement de la photo a été interrompu.")); };
+        });
+      });
+    }
+
+    function deleteProjectImage(imageId) {
+      if (supabaseClient) {
+        return supabaseClient.from("project_images").select("object_path").eq("id", imageId).single()
+          .then(function(result) {
+            if (result.error) throw result.error;
+            return supabaseClient.storage.from("site-assets").remove([result.data.object_path]).then(function(removal) {
+              if (removal.error) throw removal.error;
+              return supabaseClient.from("project_images").delete().eq("id", imageId);
+            });
+          }).then(function(result) {
+            if (result.error) throw result.error;
+          });
+      }
+      return openProjectImageDB().then(function(database) {
+        return new Promise(function(resolve, reject) {
+          var transaction = database.transaction(IMAGE_STORE_NAME, "readwrite");
+          transaction.objectStore(IMAGE_STORE_NAME).delete(Number(imageId));
+          transaction.oncomplete = resolve;
+          transaction.onerror = function() { reject(transaction.error || new Error("Impossible de supprimer la photo.")); };
+          transaction.onabort = function() { reject(transaction.error || new Error("La suppression de la photo a été interrompue.")); };
+        });
+      });
+    }
+
+    function renderProjectImages(projectId, card) {
+      var gallery = card.querySelector("[data-project-images]");
+      var status = card.querySelector("[data-image-status]");
+      var project = P[Number(projectId)];
+      var staticImages = project ? PROJECT_STATIC_IMAGES[project[0]] || [] : [];
+      gallery.replaceChildren();
+
+      function appendImageTile(imageUrl, imageName, storedImageId) {
+        var tile = document.createElement("div");
+        tile.className = "relative shrink-0 w-36 overflow-hidden rounded-lg border border-hive-line bg-hive-bg aspect-video";
+
+        var preview = document.createElement("button");
+        preview.type = "button";
+        preview.className = "block w-full h-full cursor-zoom-in";
+        preview.setAttribute("aria-label", "Agrandir " + imageName);
+        if (storedImageId === null) preview.dataset.projectStaticImage = imageUrl;
+        else preview.dataset.projectImageView = storedImageId;
+
+        var image = document.createElement("img");
+        image.src = imageUrl;
+        image.alt = imageName;
+        image.loading = "lazy";
+        image.className = "w-full h-full object-cover";
+        preview.appendChild(image);
+        tile.appendChild(preview);
+
+        if (storedImageId !== null) {
+          var remove = document.createElement("button");
+          remove.type = "button";
+          remove.className = "local-admin-control absolute top-1 right-1 w-7 h-7 rounded-full bg-black/80 text-white text-lg hover:bg-red-700";
+          remove.dataset.projectImageDelete = storedImageId;
+          remove.setAttribute("aria-label", "Supprimer " + imageName);
+          remove.textContent = "×";
+          tile.appendChild(remove);
+        }
+        gallery.appendChild(tile);
+      }
+
+      staticImages.forEach(function(imageUrl, index) {
+        appendImageTile(imageUrl, project[0] + " — image " + (index + 1), null);
+      });
+
+      getProjectImages(projectId).then(function(images) {
+        if (!card.isConnected) return;
+        images.forEach(function(record) {
+          var imageUrl = record.publicUrl || projectImageUrls.get(record.id);
+          if (!imageUrl) {
+            imageUrl = URL.createObjectURL(record.blob);
+            projectImageUrls.set(record.id, imageUrl);
+          }
+          appendImageTile(imageUrl, record.name, record.id);
+        });
+      }).catch(function(error) {
+        if (card.isConnected) status.textContent = error.message;
+      });
+    }
+
+    function openProjectImage(imageId, card) {
+      var recordId = supabaseClient ? imageId : Number(imageId);
+      getProjectImagesById(recordId).then(function(record) {
+        if (!record) throw new Error("Cette photo n’est plus disponible.");
+        var imageUrl = record.publicUrl || projectImageUrls.get(record.id);
+        if (!imageUrl) {
+          imageUrl = URL.createObjectURL(record.blob);
+          projectImageUrls.set(record.id, imageUrl);
+        }
+        var viewerImage = document.getElementById("project-image-large");
+        viewerImage.src = imageUrl;
+        viewerImage.alt = record.name;
+        document.getElementById("project-image-viewer").classList.remove("hidden");
+      }).catch(function(error) {
+        card.querySelector("[data-image-status]").textContent = error.message;
+      });
+    }
+
+    function getProjectImagesById(imageId) {
+      if (supabaseClient) {
+        return supabaseClient.from("project_images").select("id,project_id,object_path,name,created_at").eq("id", imageId).single()
+          .then(function(result) {
+            if (result.error) throw result.error;
+            return Object.assign(result.data, {
+              publicUrl: supabaseClient.storage.from("site-assets").getPublicUrl(result.data.object_path).data.publicUrl
+            });
+          });
+      }
+      return openProjectImageDB().then(function(database) {
+        return new Promise(function(resolve, reject) {
+          var request = database.transaction(IMAGE_STORE_NAME, "readonly").objectStore(IMAGE_STORE_NAME).get(imageId);
+          request.onsuccess = function() { resolve(request.result); };
+          request.onerror = function() { reject(request.error || new Error("Impossible de charger cette photo.")); };
+        });
+      });
+    }
+
+    function getSiteAsset(assetId) {
+      var remoteAsset = siteSettings.assets && siteSettings.assets[assetId];
+      if (supabaseClient && remoteAsset && remoteAsset.path) {
+        return Promise.resolve({
+          id: assetId,
+          publicUrl: supabaseClient.storage.from("site-assets").getPublicUrl(remoteAsset.path).data.publicUrl
+        });
+      }
+      return openProjectImageDB().then(function(database) {
+        return new Promise(function(resolve, reject) {
+          var request = database.transaction(SITE_ASSET_STORE_NAME, "readonly").objectStore(SITE_ASSET_STORE_NAME).get(assetId);
+          request.onsuccess = function() { resolve(request.result); };
+          request.onerror = function() { reject(request.error || new Error("Impossible de charger cette image.")); };
+        });
+      });
+    }
+
+    function saveSiteAsset(assetId, file) {
+      if (supabaseClient) {
+        var oldAsset = siteSettings.assets && siteSettings.assets[assetId];
+        var safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
+        var objectPath = "site/" + assetId + "/" + Date.now() + "-" + safeName;
+        return supabaseClient.storage.from("site-assets").upload(objectPath, file, { upsert: false })
+          .then(function(result) {
+            if (result.error) throw result.error;
+            siteSettings.assets = siteSettings.assets || {};
+            siteSettings.assets[assetId] = { path: objectPath, name: file.name };
+            return persistSiteSettings().then(function() {
+              if (oldAsset && oldAsset.path) {
+                return supabaseClient.storage.from("site-assets").remove([oldAsset.path]).then(function(removal) {
+                  if (removal.error) console.error("Impossible de supprimer l’ancienne image.", removal.error);
+                });
+              }
+            });
+          });
+      }
+      return openProjectImageDB().then(function(database) {
+        return new Promise(function(resolve, reject) {
+          var transaction = database.transaction(SITE_ASSET_STORE_NAME, "readwrite");
+          transaction.objectStore(SITE_ASSET_STORE_NAME).put({
+            id: assetId,
+            name: file.name,
+            type: file.type,
+            blob: file,
+            createdAt: Date.now()
+          });
+          transaction.oncomplete = resolve;
+          transaction.onerror = function() { reject(transaction.error || new Error("Impossible d’enregistrer cette image.")); };
+          transaction.onabort = function() { reject(transaction.error || new Error("L’enregistrement de cette image a été interrompu.")); };
+        });
+      });
+    }
+
+    function deleteSiteAsset(assetId) {
+      if (supabaseClient) {
+        var asset = siteSettings.assets && siteSettings.assets[assetId];
+        if (!asset || !asset.path) return Promise.resolve();
+        return supabaseClient.storage.from("site-assets").remove([asset.path]).then(function(result) {
+          if (result.error) throw result.error;
+          delete siteSettings.assets[assetId];
+          return persistSiteSettings();
+        });
+      }
+      return openProjectImageDB().then(function(database) {
+        return new Promise(function(resolve, reject) {
+          var transaction = database.transaction(SITE_ASSET_STORE_NAME, "readwrite");
+          transaction.objectStore(SITE_ASSET_STORE_NAME).delete(assetId);
+          transaction.oncomplete = resolve;
+          transaction.onerror = function() { reject(transaction.error || new Error("Impossible de supprimer cette image.")); };
+        });
+      });
+    }
+
+    function closeProjectImage() {
+      document.getElementById("project-image-viewer").classList.add("hidden");
+      document.getElementById("project-image-large").src = "";
+    }
+
+    function rowCard(p) {
+      var projectId = String(P.indexOf(p));
+      return `
+        <div data-project-card="${projectId}" class="p-6 rounded-2xl bg-hive-bgCard border border-hive-line hover:border-white transition-all duration-300 flex flex-col justify-between group glow-border">
+          <div>
+            <div class="flex items-center justify-between gap-2 mb-3">
+              <span class="font-mono text-[10px] uppercase tracking-wider text-white px-2.5 py-1 rounded-full bg-hive-bg border border-hive-line">
+                ${label[p[3]]}
+              </span>
+              <span class="text-[10px] font-mono text-hive-muted">${p[4] || ''}</span>
+            </div>
+            <h3 class="font-title font-bold text-lg text-white mb-2 group-hover:text-hive-muted transition-colors">${p[0]}</h3>
+            <p class="text-xs text-hive-muted font-light mb-4">${p[2]}</p>
+            <div class="mb-4">
+              <div data-project-images class="flex gap-2 overflow-x-auto pb-2"></div>
+              <p data-image-status class="text-[11px] text-hive-muted mt-2" role="status" aria-live="polite"></p>
+              <input type="file" accept="image/*" multiple class="hidden" data-image-input aria-label="Choisir des photos pour ${p[0]}">
+              <button type="button" data-image-upload class="local-admin-control mt-2 px-3 py-2 rounded-lg border border-hive-line text-hive-muted font-mono text-[10px] uppercase tracking-wider hover:border-white hover:text-white transition-colors">
+                + Ajouter des photos
+              </button>
+            </div>
+          </div>
+          <div class="pt-4 border-t border-hive-line flex items-center justify-between text-xs font-mono">
+            <span class="text-hive-muted">📍 ${p[1]}</span>
+            <span class="text-white font-semibold">THE HIVE →</span>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderProjects() {
+      Array.prototype.forEach.call(honey.children, function(b) {
+        b.setAttribute("aria-pressed", b.dataset.k === cur);
+      });
+
+      var rows = P.filter(function(p) {
+        var matchesSearch = !q || norm(p[0] + " " + p[1] + " " + p[2] + " " + (p[4]||'') + " " + label[p[3]]).indexOf(q) > -1;
+        var matchesCity = !cityFilter || cityFilter.some(function(city) { return norm(p[1]).indexOf(norm(city)) > -1; });
+        return (cur === "all" || p[3] === cur) && matchesSearch && matchesCity;
+      });
+
+      list.innerHTML = rows.slice(0, show).map(rowCard).join("");
+      Array.prototype.forEach.call(list.querySelectorAll("[data-project-card]"), function(card) {
+        renderProjectImages(card.dataset.projectCard, card);
+      });
+      
+      if (rows.length <= show) {
+        more.classList.add("hidden");
+      } else {
+        more.classList.remove("hidden");
+        more.textContent = "Voir plus de projets (" + (rows.length - show) + ")";
+      }
+
+      count.textContent = rows.length ? rows.length + (rows.length > 1 ? " projets affichés" : " projet affiché") + (cur === "all" ? "" : " dans « " + label[cur] + " »") + (qraw ? " pour « " + qraw + " »" : "") : "Aucun projet ne correspond à votre recherche.";
+      if (cityFilter) count.textContent += " — pôle géographique sélectionné";
+      document.getElementById("clear-city-filter").classList.toggle("hidden", !cityFilter);
+    }
+
+    more.addEventListener("click", function() {
+      show += LIM;
+      renderProjects();
+    });
+
+    qi.addEventListener("input", function() {
+      qraw = qi.value.trim();
+      q = norm(qraw);
+      cityFilter = null;
+      show = LIM;
+      renderProjects();
+    });
+
+    document.getElementById("clear-city-filter").addEventListener("click", function() {
+      cityFilter = null;
+      renderProjects();
+    });
+
+    renderProjects();
+
+    list.addEventListener("click", function(event) {
+      var uploadButton = event.target.closest("[data-image-upload]");
+      if (uploadButton) {
+        uploadButton.parentElement.querySelector("[data-image-input]").click();
+        return;
+      }
+
+      var staticPreviewButton = event.target.closest("[data-project-static-image]");
+      if (staticPreviewButton) {
+        var staticImage = document.getElementById("project-image-large");
+        staticImage.src = staticPreviewButton.dataset.projectStaticImage;
+        staticImage.alt = staticPreviewButton.getAttribute("aria-label").replace(/^Agrandir\s*/, "");
+        document.getElementById("project-image-viewer").classList.remove("hidden");
+        return;
+      }
+
+      var previewButton = event.target.closest("[data-project-image-view]");
+      if (previewButton) {
+        openProjectImage(previewButton.dataset.projectImageView, previewButton.closest("[data-project-card]"));
+        return;
+      }
+
+      var removeButton = event.target.closest("[data-project-image-delete]");
+      if (removeButton) {
+        var card = removeButton.closest("[data-project-card]");
+        var status = card.querySelector("[data-image-status]");
+        var imageId = supabaseClient ? removeButton.dataset.projectImageDelete : Number(removeButton.dataset.projectImageDelete);
+        deleteProjectImage(imageId).then(function() {
+          var imageUrl = projectImageUrls.get(imageId);
+          if (imageUrl) URL.revokeObjectURL(imageUrl);
+          projectImageUrls.delete(imageId);
+          status.textContent = "Photo supprimée.";
+          renderProjectImages(card.dataset.projectCard, card);
+        }).catch(function(error) {
+          status.textContent = error.message;
+        });
+      }
+    });
+
+    list.addEventListener("change", function(event) {
+      var input = event.target.closest("[data-image-input]");
+      if (!input || !input.files.length) return;
+
+      var card = input.closest("[data-project-card]");
+      var projectId = card.dataset.projectCard;
+      var status = card.querySelector("[data-image-status]");
+      var files = Array.prototype.slice.call(input.files);
+      var saved = 0;
+      var errors = [];
+      input.value = "";
+      status.textContent = "Enregistrement des photos…";
+
+      files.reduce(function(queue, file) {
+        return queue.then(function() {
+          if (!file.type.startsWith("image/")) {
+            errors.push(file.name + " : format d’image non pris en charge.");
+            return;
+          }
+          if (file.size > MAX_PROJECT_IMAGE_SIZE) {
+            errors.push(file.name + " : taille maximale de 10 Mo.");
+            return;
+          }
+          return saveProjectImage(projectId, file).then(function() {
+            saved += 1;
+          }).catch(function(error) {
+            errors.push(file.name + " : " + error.message);
+          });
+        });
+      }, Promise.resolve()).then(function() {
+        if (!card.isConnected) return;
+        status.textContent = (saved ? saved + " photo(s) ajoutée(s). " : "") + errors.join(" ");
+        renderProjectImages(projectId, card);
+      });
+    });
+
+    document.getElementById("close-project-image").addEventListener("click", closeProjectImage);
+    document.getElementById("project-image-viewer").addEventListener("click", function(event) {
+      if (event.target === event.currentTarget) closeProjectImage();
+    });
+
+    // --- LIGHTBOX GALERIE ---
+    var galleryData = [
+      { src: "assets/projects/villa-lagoon-mirage/01.jpg", cat: "Architecture résidentielle", title: "Villa Lagoon Mirage — vue extérieure" },
+      { src: "assets/projects/villa-lagoon-mirage/02.jpg", cat: "Architecture résidentielle", title: "Villa Lagoon Mirage — perspective" },
+      { src: "assets/projects/ministere-budget/01.jpg", cat: "Aménagement", title: "Hall du Ministère du Budget — vue 1" },
+      { src: "assets/projects/ministere-budget/02.jpg", cat: "Aménagement", title: "Hall du Ministère du Budget — vue 2" },
+      { src: "assets/projects/dalle-decontamination/01.jpg", cat: "Projet industriel", title: "Dalle de décontamination — vue 1" },
+      { src: "assets/projects/dalle-decontamination/02.jpg", cat: "Projet industriel", title: "Dalle de décontamination — vue 2" }
+    ];
+    if (Array.isArray(siteSettings.gallery)) {
+      siteSettings.gallery.forEach(function(saved, index) {
+        if (!galleryData[index] || !saved) return;
+        if (typeof saved.title === "string") galleryData[index].title = saved.title;
+        if (typeof saved.cat === "string") galleryData[index].cat = saved.cat;
+      });
+    }
+
+    var siteAssetUrls = new Map();
+    function renderGallery() {
+      var cards = document.querySelectorAll("#galerie-grid > div");
+      Array.prototype.forEach.call(cards, function(card, index) {
+        var item = galleryData[index];
+        if (!item) return;
+        var image = card.querySelector("img");
+        var caption = card.querySelector("span");
+        var title = card.querySelector("h4");
+        image.alt = item.title;
+        image.src = item.src;
+        caption.textContent = item.cat;
+        title.textContent = item.title;
+        card.setAttribute("role", "button");
+        card.setAttribute("tabindex", "0");
+        card.setAttribute("aria-label", "Agrandir : " + item.title);
+        card.onclick = function() { openLightbox(index); };
+        card.onkeydown = function(event) {
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            openLightbox(index);
+          }
+        };
+        getSiteAsset("gallery-" + index).then(function(asset) {
+          if (!asset || !card.isConnected) return;
+          if (asset.publicUrl) {
+            image.src = asset.publicUrl;
+            return;
+          }
+          var url = siteAssetUrls.get(asset.id);
+          if (!url) {
+            url = URL.createObjectURL(asset.blob);
+            siteAssetUrls.set(asset.id, url);
+          }
+          image.src = url;
+        }).catch(function(error) {
+          console.error(error);
+        });
+      });
+    }
+    renderGallery();
+
+    var lbIdx = 0;
+    function openLightbox(idx) {
+      lbIdx = idx;
+      updateLightbox();
+      document.getElementById('lightbox').classList.remove('hidden');
+    }
+    function closeLightbox() {
+      document.getElementById('lightbox').classList.add('hidden');
+    }
+    function prevLightbox() {
+      lbIdx = (lbIdx - 1 + galleryData.length) % galleryData.length;
+      updateLightbox();
+    }
+    function nextLightbox() {
+      lbIdx = (lbIdx + 1) % galleryData.length;
+      updateLightbox();
+    }
+    function updateLightbox() {
+      var item = galleryData[lbIdx];
+      var savedImage = document.querySelector('#galerie-grid > div:nth-child(' + (lbIdx + 1) + ') img');
+      document.getElementById('lb-img').src = savedImage ? savedImage.src : item.src;
+      document.getElementById('lb-cat').textContent = item.cat;
+      document.getElementById('lb-title').textContent = item.title;
+    }
+
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && !document.getElementById('project-image-viewer').classList.contains('hidden')) {
+        closeProjectImage();
+      }
+      if (!document.getElementById('lightbox').classList.contains('hidden')) {
+        if (e.key === 'Escape') closeLightbox();
+        if (e.key === 'ArrowLeft') prevLightbox();
+        if (e.key === 'ArrowRight') nextLightbox();
+      }
+    });
+
+    // --- CARTE DU GABON INTERACTIVE ---
+    function selectCity(title, desc, cities) {
+      document.getElementById("city-title").textContent = title;
+      document.getElementById("city-desc").textContent = desc;
+      cityFilter = cities || null;
+      q = "";
+      qraw = "";
+      qi.value = "";
+      cur = "all";
+      show = LIM;
+      renderProjects();
+      document.getElementById("sec-projets").scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    var COPY_TARGETS = [
+      { key: "home-navigation", label: "Navigation — Accueil", selector: 'header nav a[href="#sec-1"]' },
+      { key: "home-description", label: "Accueil — texte d’introduction", selector: ".hero-subtitle" },
+      { key: "budget-heading", label: "Estimateur — titre", selector: "#sec-simulateur h2" },
+      { key: "services-heading", label: "Prestations — titre", selector: "#sec-services h2" },
+      { key: "services-summary", label: "Prestations — présentation", selector: "#sec-services .services-summary" },
+      { key: "projects-heading", label: "Projets — titre", selector: "#sec-projets h2" },
+      { key: "team-heading", label: "Équipe — titre", selector: "#sec-equipe h2" },
+      { key: "gallery-heading", label: "Galerie — titre", selector: "#sec-galerie h2" },
+      { key: "territory-heading", label: "Carte — titre", selector: "#sec-maillage h2" },
+      { key: "quote-heading", label: "Devis — titre", selector: "#devis h3" },
+      { key: "quote-description", label: "Devis — description", selector: "#devis > p" }
+    ];
+
+    function findCopyTarget(key) {
+      var config = COPY_TARGETS.find(function(item) { return item.key === key; });
+      return config ? document.querySelector(config.selector) : null;
+    }
+
+    function applySavedCopy() {
+      var copy = siteSettings.copy || {};
+      COPY_TARGETS.forEach(function(config) {
+        var target = findCopyTarget(config.key);
+        if (target && typeof copy[config.key] === "string") target.textContent = copy[config.key];
+      });
+    }
+
+    function buildCopyEditor() {
+      var container = document.getElementById("admin-copy-fields");
+      container.replaceChildren();
+      COPY_TARGETS.forEach(function(config) {
+        var target = findCopyTarget(config.key);
+        if (!target) return;
+        var field = document.createElement("label");
+        field.className = "block text-xs text-hive-muted";
+        var caption = document.createElement("span");
+        caption.className = "block mb-1";
+        caption.textContent = config.label;
+        var input = document.createElement("textarea");
+        input.className = "w-full min-h-16 px-3 py-2 rounded-lg bg-hive-bg border border-hive-line text-white";
+        input.dataset.copyKey = config.key;
+        input.value = target.textContent.trim();
+        field.appendChild(caption);
+        field.appendChild(input);
+        container.appendChild(field);
+      });
+    }
+
+    function renderGalleryEditor() {
+      var container = document.getElementById("admin-gallery-fields");
+      container.replaceChildren();
+      galleryData.forEach(function(item, index) {
+        var card = document.createElement("div");
+        card.className = "p-4 rounded-xl bg-hive-bg border border-hive-line space-y-3";
+        var heading = document.createElement("h4");
+        heading.className = "font-title font-bold text-white";
+        heading.textContent = "Image " + (index + 1);
+        var preview = document.createElement("img");
+        preview.className = "w-full h-32 object-cover rounded-lg";
+        preview.alt = item.title;
+        var current = document.querySelector("#galerie-grid > div:nth-child(" + (index + 1) + ") img");
+        preview.src = current ? current.src : item.src;
+        var title = document.createElement("input");
+        title.type = "text";
+        title.maxLength = 100;
+        title.value = item.title;
+        title.className = "w-full px-3 py-2 rounded-lg bg-hive-bgCard border border-hive-line text-white";
+        title.dataset.galleryTitle = String(index);
+        title.setAttribute("aria-label", "Titre de l’image " + (index + 1));
+        var category = document.createElement("input");
+        category.type = "text";
+        category.maxLength = 80;
+        category.value = item.cat;
+        category.className = "w-full px-3 py-2 rounded-lg bg-hive-bgCard border border-hive-line text-white";
+        category.dataset.galleryCategory = String(index);
+        category.setAttribute("aria-label", "Catégorie de l’image " + (index + 1));
+        var input = document.createElement("input");
+        input.type = "file";
+        input.accept = "image/*";
+        input.className = "block w-full text-xs text-hive-muted";
+        input.dataset.galleryFile = String(index);
+        var reset = document.createElement("button");
+        reset.type = "button";
+        reset.className = "px-3 py-2 rounded-lg border border-hive-line text-xs text-hive-muted";
+        reset.dataset.galleryReset = String(index);
+        reset.textContent = "Rétablir l’image d’origine";
+        card.appendChild(heading);
+        card.appendChild(preview);
+        card.appendChild(title);
+        card.appendChild(category);
+        card.appendChild(input);
+        card.appendChild(reset);
+        container.appendChild(card);
+      });
+    }
+
+    function renderPartners() {
+      var track = document.getElementById("partner-track");
+      track.replaceChildren();
+      [false, true].forEach(function(isDuplicate) {
+        sitePartners.forEach(function(partner) {
+          var item = document.createElement("div");
+          item.className = "px-8 shrink-0 flex items-center justify-center min-w-48 h-20";
+          if (isDuplicate) item.setAttribute("aria-hidden", "true");
+          var logo = document.createElement("img");
+          logo.className = "max-h-16 max-w-40 object-contain bg-white rounded-md p-1";
+          logo.alt = partner.name + " — logo";
+          var defaultLogo = DEFAULT_PARTNER_LOGOS[partner.id];
+          logo.hidden = !defaultLogo;
+          if (defaultLogo) logo.src = defaultLogo;
+          var name = document.createElement("span");
+          name.className = "font-title font-bold text-white text-lg";
+          name.textContent = partner.name;
+          name.hidden = !!defaultLogo;
+          getSiteAsset("partner-" + partner.id).then(function(asset) {
+            if (!asset || !item.isConnected) return;
+            if (asset.publicUrl) {
+              logo.src = asset.publicUrl;
+              logo.alt = partner.name + " — logo";
+              logo.hidden = false;
+              name.hidden = true;
+              return;
+            }
+            var url = siteAssetUrls.get(asset.id);
+            if (!url) {
+              url = URL.createObjectURL(asset.blob);
+              siteAssetUrls.set(asset.id, url);
+            }
+            logo.src = url;
+            logo.alt = partner.name + " — logo";
+            logo.hidden = false;
+            name.hidden = true;
+          }).catch(function(error) {
+            console.error(error);
+          });
+          item.appendChild(logo);
+          item.appendChild(name);
+          track.appendChild(item);
+        });
+      });
+    }
+
+    function renderPartnerEditor() {
+      var container = document.getElementById("admin-partner-fields");
+      container.replaceChildren();
+      sitePartners.forEach(function(partner) {
+        var row = document.createElement("div");
+        row.className = "grid grid-cols-1 sm:grid-cols-[1fr_auto_auto] gap-3 items-center p-3 rounded-xl bg-hive-bg border border-hive-line";
+        var name = document.createElement("input");
+        name.type = "text";
+        name.maxLength = 80;
+        name.value = partner.name;
+        name.className = "w-full px-3 py-2 rounded-lg bg-hive-bgCard border border-hive-line text-white";
+        name.dataset.partnerName = partner.id;
+        var logo = document.createElement("input");
+        logo.type = "file";
+        logo.accept = "image/*";
+        logo.className = "text-xs text-hive-muted";
+        logo.dataset.partnerLogo = partner.id;
+        var remove = document.createElement("button");
+        remove.type = "button";
+        remove.className = "px-3 py-2 rounded-lg border border-hive-line text-xs text-hive-muted";
+        remove.dataset.partnerDelete = partner.id;
+        remove.textContent = "Supprimer";
+        row.appendChild(name);
+        row.appendChild(logo);
+        row.appendChild(remove);
+        container.appendChild(row);
+      });
+    }
+
+    function buildEstimatorEditor() {
+      var container = document.getElementById("admin-estimator-fields");
+      container.replaceChildren();
+      var profiles = [
+        ["student", "Étudiant"],
+        ["young-worker", "Jeune travailleur"],
+        ["nonprofit", "Association"],
+        ["family", "Particulier / Famille"],
+        ["investor", "Investisseur"],
+        ["company", "Entreprise"]
+      ];
+      var coefficients = document.createElement("div");
+      coefficients.className = "space-y-3";
+      profiles.forEach(function(profile) {
+        var label = document.createElement("label");
+        label.className = "flex items-center justify-between gap-3 text-xs text-hive-muted";
+        var text = document.createElement("span");
+        text.textContent = "Coefficient — " + profile[1];
+        var input = document.createElement("input");
+        input.type = "number";
+        input.min = "0";
+        input.max = "10";
+        input.step = "0.05";
+        input.value = PROFILE_COEFFICIENTS[profile[0]];
+        input.className = "w-28 px-3 py-2 rounded-lg bg-hive-bg border border-hive-line text-white";
+        input.dataset.profileCoefficient = profile[0];
+        label.appendChild(text);
+        label.appendChild(input);
+        coefficients.appendChild(label);
+      });
+      var rates = document.createElement("div");
+      rates.className = "space-y-3";
+      Object.keys(COST_ITEM_LABELS).forEach(function(key) {
+        var row = document.createElement("div");
+        row.className = "grid grid-cols-1 sm:grid-cols-[1fr_9rem_9rem] gap-2 items-center";
+        var text = document.createElement("span");
+        text.className = "text-xs text-hive-muted";
+        text.textContent = COST_ITEM_LABELS[key];
+        var mode = document.createElement("select");
+        mode.className = "px-3 py-2 rounded-lg bg-hive-bg border border-hive-line text-white";
+        mode.dataset.costMode = key;
+        [["percent", "Pourcentage"], ["flat", "Forfait FCFA"]].forEach(function(optionData) {
+          var option = document.createElement("option");
+          option.value = optionData[0];
+          option.textContent = optionData[1];
+          mode.appendChild(option);
+        });
+        var input = document.createElement("input");
+        input.type = "number";
+        input.min = "0";
+        input.max = "2000000000";
+        input.step = "0.5";
+        var item = PROFILE_COST_ITEMS[key] || { mode: "percent", value: 0 };
+        mode.value = item.mode === "flat" ? "flat" : "percent";
+        input.value = item.value;
+        input.className = "px-3 py-2 rounded-lg bg-hive-bg border border-hive-line text-white";
+        input.dataset.costValue = key;
+        input.max = mode.value === "flat" ? "2000000000" : "100";
+        input.step = mode.value === "flat" ? "10000" : "0.5";
+        mode.addEventListener("change", function() {
+          input.max = mode.value === "flat" ? "2000000000" : "100";
+          input.step = mode.value === "flat" ? "10000" : "0.5";
+        });
+        row.appendChild(text);
+        row.appendChild(mode);
+        row.appendChild(input);
+        rates.appendChild(row);
+      });
+      var priceLabel = document.createElement("label");
+      priceLabel.className = "block text-xs text-hive-muted";
+      priceLabel.textContent = "Prix de base au m² (FCFA)";
+      var price = document.createElement("input");
+      price.type = "number";
+      price.min = "0";
+      price.max = "2000000";
+      price.step = "10000";
+      price.value = siteSettings.priceM2 || 0;
+      price.className = "mt-1 w-full px-3 py-2 rounded-lg bg-hive-bg border border-hive-line text-white";
+      price.id = "admin-price-m2";
+      priceLabel.appendChild(price);
+      container.appendChild(coefficients);
+      container.appendChild(rates);
+      container.appendChild(priceLabel);
+    }
+
+    function renderAdminEditor() {
+      if (supabaseClient && !adminIsVerified) {
+        throw new Error("Accès administrateur non vérifié.");
+      }
+      applySavedCopy();
+      buildCopyEditor();
+      renderGalleryEditor();
+      renderPartnerEditor();
+      buildEstimatorEditor();
+      document.body.classList.add("admin-unlocked");
+      document.getElementById("admin-login").classList.add("hidden");
+      document.getElementById("admin-editor").classList.remove("hidden");
+    }
+
+    function hashAdminPassword(password) {
+      if (!window.crypto || !window.crypto.subtle) {
+        return Promise.reject(new Error("Le code d’accès nécessite une connexion sécurisée (HTTPS ou localhost)."));
+      }
+      return window.crypto.subtle.digest("SHA-256", new TextEncoder().encode(password)).then(function(hash) {
+        return Array.from(new Uint8Array(hash)).map(function(byte) { return byte.toString(16).padStart(2, "0"); }).join("");
+      });
+    }
+
+    function setAdminStatus(message) {
+      document.getElementById("admin-status").textContent = message;
+    }
+
+    function closeAdminPanel() {
+      document.getElementById("admin-panel").classList.add("hidden");
+    }
+
+    document.querySelectorAll("#open-admin, #open-admin-footer").forEach(function(button) {
+      button.addEventListener("click", function() {
+      document.getElementById("admin-panel").classList.remove("hidden");
+      document.getElementById("admin-editor").classList.add("hidden");
+      document.getElementById("admin-login").classList.add("hidden");
+      if (supabaseClient) {
+        verifySupabaseAdmin().then(function(isAdmin) {
+          if (isAdmin) renderAdminEditor();
+          else document.getElementById("admin-login").classList.remove("hidden");
+        }).catch(function(error) {
+          document.getElementById("admin-login").classList.remove("hidden");
+          document.getElementById("admin-login-status").textContent = "Vérification de l’accès impossible : " + error.message;
+        });
+        return;
+      }
+      var isSetup = !localStorage.getItem(ADMIN_PASSWORD_KEY);
+      document.getElementById("admin-login").classList.remove("hidden");
+      document.getElementById("admin-login-help").textContent = isSetup
+        ? "Première utilisation : créez un code local d’au moins 8 caractères."
+        : "Saisissez votre code d’accès local.";
+      document.getElementById("admin-password").minLength = isSetup ? 8 : 1;
+      if (sessionStorage.getItem("the-hive-admin-unlocked") === "1") renderAdminEditor();
+      });
+    });
+
+    document.getElementById("close-admin").addEventListener("click", closeAdminPanel);
+    document.getElementById("admin-panel").addEventListener("click", function(event) {
+      if (event.target === event.currentTarget) closeAdminPanel();
+    });
+    document.getElementById("admin-login").addEventListener("submit", function(event) {
+      event.preventDefault();
+      var input = document.getElementById("admin-password");
+      var status = document.getElementById("admin-login-status");
+      var password = input.value;
+      if (supabaseClient) {
+        supabaseClient.auth.signInWithPassword({
+          email: document.getElementById("admin-email").value.trim(),
+          password: password
+        }).then(function(result) {
+          if (result.error) throw result.error;
+          return verifySupabaseAdmin();
+        }).then(function(isAdmin) {
+          if (!isAdmin) {
+            return supabaseClient.auth.signOut().then(function(signOut) {
+              if (signOut.error) throw signOut.error;
+              throw new Error("Ce compte n’est pas inscrit comme administrateur THE HIVE.");
+            });
+          }
+          status.textContent = "";
+          input.value = "";
+          sessionStorage.setItem("the-hive-admin-unlocked", "1");
+          renderAdminEditor();
+        }).catch(function(error) {
+          status.textContent = "Connexion impossible : " + error.message;
+        });
+        return;
+      }
+      var savedHash = localStorage.getItem(ADMIN_PASSWORD_KEY);
+      hashAdminPassword(password).then(function(hash) {
+        if (savedHash && savedHash !== hash) {
+          status.textContent = "Code incorrect.";
+          return;
+        }
+        if (!savedHash) localStorage.setItem(ADMIN_PASSWORD_KEY, hash);
+        sessionStorage.setItem("the-hive-admin-unlocked", "1");
+        input.value = "";
+        status.textContent = "";
+        renderAdminEditor();
+      }).catch(function(error) {
+        status.textContent = error.message;
+      });
+    });
+
+    document.getElementById("admin-logout").addEventListener("click", function() {
+      sessionStorage.removeItem("the-hive-admin-unlocked");
+      var finishLogout = function() {
+        adminIsVerified = false;
+        document.getElementById("admin-editor").classList.add("hidden");
+        document.getElementById("admin-login").classList.remove("hidden");
+        document.getElementById("admin-login-status").textContent = "Éditeur verrouillé.";
+        document.getElementById("admin-login-help").textContent = supabaseClient
+          ? "Connectez-vous avec votre adresse e-mail et votre mot de passe Supabase."
+          : "Saisissez votre code d’accès local.";
+        closeAdminPanel();
+        document.body.classList.remove("admin-unlocked");
+      };
+      if (!supabaseClient) {
+        finishLogout();
+        return;
+      }
+      supabaseClient.auth.signOut().then(function(result) {
+        if (result.error) throw result.error;
+        finishLogout();
+      }).catch(function(error) {
+        setAdminStatus("Déconnexion impossible : " + error.message);
+      });
+    });
+
+    document.getElementById("save-copy").addEventListener("click", function() {
+      var copy = {};
+      document.querySelectorAll("[data-copy-key]").forEach(function(input) {
+        var target = findCopyTarget(input.dataset.copyKey);
+        if (!target) return;
+        target.textContent = input.value;
+        copy[input.dataset.copyKey] = input.value;
+      });
+      siteSettings.copy = copy;
+      persistSiteSettings().then(function() {
+        setAdminStatus("Textes enregistrés.");
+        buildCopyEditor();
+      }).catch(function(error) {
+        setAdminStatus("Erreur lors de l’enregistrement des textes : " + error.message);
+      });
+    });
+
+    document.getElementById("save-estimator").addEventListener("click", function() {
+      var valid = true;
+      document.querySelectorAll("[data-profile-coefficient]").forEach(function(input) {
+        var value = Number(input.value);
+        if (!Number.isFinite(value) || value < 0 || value > 10) valid = false;
+        else PROFILE_COEFFICIENTS[input.dataset.profileCoefficient] = value;
+      });
+      var costItems = {};
+      document.querySelectorAll("[data-cost-value]").forEach(function(input) {
+        var key = input.dataset.costValue;
+        var mode = document.querySelector('[data-cost-mode="' + key + '"]').value;
+        var value = Number(input.value);
+        var max = mode === "flat" ? 2000000000 : 100;
+        if (!Number.isFinite(value) || value < 0 || value > max) valid = false;
+        else costItems[key] = { mode: mode, value: value };
+      });
+      var price = Number(document.getElementById("admin-price-m2").value);
+      if (!Number.isFinite(price) || price < 0 || price > 2000000) valid = false;
+      if (!valid) {
+        setAdminStatus("Valeurs invalides : coefficients de 0 à 10, taux de 0 à 100 %, forfaits jusqu’à 2 000 000 000 FCFA et prix jusqu’à 2 000 000 FCFA/m².");
+        return;
+      }
+      siteSettings.coefficients = PROFILE_COEFFICIENTS;
+      PROFILE_COST_ITEMS = costItems;
+      siteSettings.costItems = PROFILE_COST_ITEMS;
+      siteSettings.rates = Object.keys(PROFILE_COST_ITEMS).reduce(function(rates, key) {
+        rates[key] = PROFILE_COST_ITEMS[key].mode === "percent" ? PROFILE_COST_ITEMS[key].value / 100 : 0;
+        return rates;
+      }, {});
+      PROFILE_COST_RATES = siteSettings.rates;
+      siteSettings.priceM2 = price;
+      document.getElementById("sim-price").value = price;
+      syncCostControls();
+      persistSiteSettings().then(function() {
+        calculateBudget();
+        setAdminStatus("Paramètres de l’estimateur enregistrés.");
+        buildEstimatorEditor();
+      }).catch(function(error) {
+        setAdminStatus("Erreur lors de l’enregistrement des paramètres : " + error.message);
+      });
+    });
+
+    document.getElementById("admin-partner-fields").addEventListener("change", function(event) {
+      var input = event.target;
+      if (input.matches("[data-partner-name]")) {
+        var partner = sitePartners.find(function(item) { return item.id === input.dataset.partnerName; });
+        if (partner && input.value.trim()) {
+          partner.name = input.value.trim();
+          siteSettings.partners = sitePartners;
+          persistSiteSettings().then(function() {
+            renderPartners();
+            setAdminStatus("Nom du partenaire enregistré.");
+          }).catch(function(error) {
+            setAdminStatus("Erreur d’enregistrement : " + error.message);
+          });
+        }
+      }
+      if (input.matches("[data-partner-logo]") && input.files.length) {
+        var file = input.files[0];
+        if (!file.type.startsWith("image/") || file.size > MAX_PROJECT_IMAGE_SIZE) {
+          setAdminStatus("Choisissez une image de 10 Mo maximum.");
+          input.value = "";
+          return;
+        }
+        saveSiteAsset("partner-" + input.dataset.partnerLogo, file).then(function() {
+          renderPartners();
+          renderPartnerEditor();
+          setAdminStatus("Logo du partenaire enregistré.");
+        }).catch(function(error) {
+          setAdminStatus("Impossible d’enregistrer le logo : " + error.message);
+        });
+      }
+    });
+
+    document.getElementById("admin-partner-fields").addEventListener("click", function(event) {
+      var button = event.target.closest("[data-partner-delete]");
+      if (!button) return;
+      var id = button.dataset.partnerDelete;
+      sitePartners = sitePartners.filter(function(partner) { return partner.id !== id; });
+      siteSettings.partners = sitePartners;
+      persistSiteSettings().then(function() { return deleteSiteAsset("partner-" + id); }).then(function() {
+        renderPartners();
+        renderPartnerEditor();
+        setAdminStatus("Partenaire supprimé.");
+      }).catch(function(error) {
+        setAdminStatus("Impossible de supprimer le partenaire : " + error.message);
+      });
+    });
+
+    document.getElementById("add-partner").addEventListener("click", function() {
+      var input = document.getElementById("new-partner-name");
+      var name = input.value.trim();
+      if (!name) {
+        setAdminStatus("Saisissez le nom du partenaire.");
+        return;
+      }
+      sitePartners.push({ id: "partner-" + Date.now().toString(36), name: name });
+      siteSettings.partners = sitePartners;
+      persistSiteSettings().then(function() {
+        renderPartners();
+        renderPartnerEditor();
+        input.value = "";
+        setAdminStatus("Partenaire ajouté. Vous pouvez maintenant choisir son logo.");
+      }).catch(function(error) {
+        setAdminStatus("Impossible d’enregistrer le partenaire : " + error.message);
+      });
+    });
+
+    document.getElementById("admin-gallery-fields").addEventListener("change", function(event) {
+      var input = event.target.closest("[data-gallery-file]");
+      if (!input) {
+        var textInput = event.target.closest("[data-gallery-title], [data-gallery-category]");
+        if (!textInput) return;
+        var metadataIndex = Number(textInput.dataset.galleryTitle || textInput.dataset.galleryCategory);
+        if (textInput.dataset.galleryTitle !== undefined) galleryData[metadataIndex].title = textInput.value.trim();
+        else galleryData[metadataIndex].cat = textInput.value.trim();
+        siteSettings.gallery = galleryData.map(function(item) { return { title: item.title, cat: item.cat }; });
+        persistSiteSettings().then(function() {
+          renderGallery();
+          setAdminStatus("Titre et catégorie de la galerie enregistrés.");
+        }).catch(function(error) {
+          setAdminStatus("Impossible d’enregistrer le texte : " + error.message);
+        });
+        return;
+      }
+      if (!input.files.length) return;
+      var file = input.files[0];
+      var index = Number(input.dataset.galleryFile);
+      if (!file.type.startsWith("image/") || file.size > MAX_PROJECT_IMAGE_SIZE) {
+        setAdminStatus("Choisissez une image de 10 Mo maximum.");
+        input.value = "";
+        return;
+      }
+      saveSiteAsset("gallery-" + index, file).then(function() {
+        renderGallery();
+        renderGalleryEditor();
+        setAdminStatus("Image de galerie enregistrée.");
+      }).catch(function(error) {
+        setAdminStatus("Impossible d’enregistrer l’image : " + error.message);
+      });
+    });
+
+    document.getElementById("admin-gallery-fields").addEventListener("click", function(event) {
+      var button = event.target.closest("[data-gallery-reset]");
+      if (!button) return;
+      var assetId = "gallery-" + button.dataset.galleryReset;
+      deleteSiteAsset(assetId).then(function() {
+        var url = siteAssetUrls.get(assetId);
+        if (url) URL.revokeObjectURL(url);
+        siteAssetUrls.delete(assetId);
+        renderGallery();
+        renderGalleryEditor();
+        setAdminStatus("Image d’origine rétablie.");
+      }).catch(function(error) {
+        setAdminStatus("Impossible de rétablir l’image : " + error.message);
+      });
+    });
+
+    function readAllRecords(storeName) {
+      return openProjectImageDB().then(function(database) {
+        return new Promise(function(resolve, reject) {
+          var request = database.transaction(storeName, "readonly").objectStore(storeName).getAll();
+          request.onsuccess = function() { resolve(request.result); };
+          request.onerror = function() { reject(request.error || new Error("Impossible de lire les données à sauvegarder.")); };
+        });
+      });
+    }
+
+    function blobToDataUrl(blob) {
+      return new Promise(function(resolve, reject) {
+        var reader = new FileReader();
+        reader.onload = function() { resolve(reader.result); };
+        reader.onerror = function() { reject(reader.error || new Error("Impossible de préparer une image pour la sauvegarde.")); };
+        reader.readAsDataURL(blob);
+      });
+    }
+
+    function replaceStoreRecords(storeName, records) {
+      return openProjectImageDB().then(function(database) {
+        return new Promise(function(resolve, reject) {
+          var transaction = database.transaction(storeName, "readwrite");
+          var store = transaction.objectStore(storeName);
+          store.clear();
+          records.forEach(function(record) { store.put(record); });
+          transaction.oncomplete = resolve;
+          transaction.onerror = function() { reject(transaction.error || new Error("Impossible de restaurer les images.")); };
+          transaction.onabort = function() { reject(transaction.error || new Error("La restauration des images a été interrompue.")); };
+        });
+      });
+    }
+
+    function getRemoteBackupAssets() {
+      return Promise.all([
+        supabaseClient.from("project_images").select("id,project_id,object_path,name,created_at"),
+        supabaseClient.from("site_content").select("value").eq("key", "main").maybeSingle()
+      ]).then(function(results) {
+          if (results[0].error) throw results[0].error;
+          if (results[1].error) throw results[1].error;
+          var savedSettings = results[1].data ? results[1].data.value || {} : siteSettings;
+          var sources = [];
+          Object.keys(savedSettings.assets || {}).forEach(function(id) {
+            var asset = savedSettings.assets[id];
+            if (asset && asset.path) {
+              sources.push({ store: SITE_ASSET_STORE_NAME, record: { id: id, name: asset.name }, path: asset.path });
+            }
+          });
+          results[0].data.forEach(function(record) {
+            sources.push({
+              store: IMAGE_STORE_NAME,
+              record: { projectId: record.project_id, name: record.name },
+              path: record.object_path
+            });
+          });
+          return Promise.all(sources.map(function(source) {
+            return supabaseClient.storage.from("site-assets").download(source.path).then(function(download) {
+              if (download.error) throw download.error;
+              return blobToDataUrl(download.data).then(function(data) {
+                return { store: source.store, record: Object.assign({}, source.record, { data: data }) };
+              });
+            });
+          })).then(function(assets) {
+            return { settings: savedSettings, assets: assets };
+          });
+        });
+    }
+
+    function restoreRemoteBackupAssets(backup) {
+      return supabaseClient.from("project_images").select("id,object_path").then(function(existing) {
+        if (existing.error) throw existing.error;
+        var oldPaths = existing.data.map(function(record) { return record.object_path; });
+        Object.keys(siteSettings.assets || {}).forEach(function(id) {
+          var asset = siteSettings.assets[id];
+          if (asset && asset.path) oldPaths.push(asset.path);
+        });
+        var newSettings = JSON.parse(JSON.stringify(backup.settings));
+        newSettings.assets = {};
+        var projectRows = [];
+        var uploadedPaths = [];
+        var committed = false;
+        var projectRowsInserted = false;
+        return Promise.all(backup.assets.map(function(asset) {
+          if (!asset.record || typeof asset.record.data !== "string" || !asset.record.data.startsWith("data:image/")) {
+            throw new Error("Le fichier contient une image ou un emplacement de stockage invalide.");
+          }
+          return fetch(asset.record.data).then(function(response) { return response.blob(); }).then(function(blob) {
+            if (!blob.type.startsWith("image/") || blob.size > MAX_PROJECT_IMAGE_SIZE) {
+              throw new Error("Une image de la sauvegarde dépasse la limite autorisée de 10 Mo ou son format est invalide.");
+            }
+            var isSiteAsset = asset.store === SITE_ASSET_STORE_NAME;
+            if (!isSiteAsset && asset.store !== IMAGE_STORE_NAME) {
+              throw new Error("La sauvegarde contient un emplacement de stockage inconnu.");
+            }
+            var assetId = isSiteAsset ? String(asset.record.id || "") : "";
+            var projectId = isSiteAsset ? "" : String(asset.record.projectId || "");
+            if ((isSiteAsset && !assetId) || (!isSiteAsset && !projectId)) {
+              throw new Error("La sauvegarde contient une image sans identifiant.");
+            }
+            var safeName = String(asset.record.name || "image").replace(/[^a-zA-Z0-9._-]/g, "_");
+            var objectPath = (isSiteAsset ? "site/" + assetId : "projects/" + projectId) +
+              "/restore-" + Date.now() + "-" + Math.random().toString(36).slice(2) + "-" + safeName;
+            return supabaseClient.storage.from("site-assets").upload(objectPath, blob, { upsert: false }).then(function(upload) {
+              if (upload.error) throw upload.error;
+              uploadedPaths.push(objectPath);
+              if (isSiteAsset) newSettings.assets[assetId] = { path: objectPath, name: asset.record.name || safeName };
+              else projectRows.push({ project_id: projectId, object_path: objectPath, name: asset.record.name || safeName });
+            });
+          });
+        })).then(function() {
+          return projectRows.length
+            ? supabaseClient.from("project_images").insert(projectRows)
+            : Promise.resolve({ error: null });
+        }).then(function(insertResult) {
+          if (insertResult.error) throw insertResult.error;
+          projectRowsInserted = projectRows.length > 0;
+          siteSettings = newSettings;
+          return persistSiteSettings().then(function() { committed = true; });
+        }).then(function() {
+          var oldIds = existing.data.map(function(record) { return record.id; });
+          var removeRows = oldIds.length
+            ? supabaseClient.from("project_images").delete().in("id", oldIds)
+            : Promise.resolve({ error: null });
+          return removeRows.then(function(deletion) {
+            if (deletion.error) throw deletion.error;
+            if (!oldPaths.length) return;
+            return supabaseClient.storage.from("site-assets").remove(oldPaths).then(function(removal) {
+              if (removal.error) throw removal.error;
+            });
+          }).catch(function(cleanupError) {
+            console.error("La sauvegarde est restaurée, mais le nettoyage des anciens fichiers a échoué.", cleanupError);
+            return "cleanup-warning";
+          });
+        }).catch(function(error) {
+          if (committed) {
+            console.error("La sauvegarde est restaurée, mais le nettoyage des anciens fichiers a échoué.", error);
+            return "cleanup-warning";
+          }
+          var removeInsertedRows = projectRowsInserted
+            ? supabaseClient.from("project_images").delete().in("object_path", projectRows.map(function(record) { return record.object_path; }))
+            : Promise.resolve({ error: null });
+          return removeInsertedRows.then(function(rowCleanup) {
+            if (rowCleanup.error) console.error("Nettoyage des lignes d’images restaurées incomplet.", rowCleanup.error);
+            if (!uploadedPaths.length) throw error;
+            return supabaseClient.storage.from("site-assets").remove(uploadedPaths).then(function(cleanup) {
+              if (cleanup.error) console.error("Nettoyage des fichiers restaurés incomplet.", cleanup.error);
+              throw error;
+            });
+          });
+        });
+      });
+    }
+
+    document.getElementById("export-admin-data").addEventListener("click", function() {
+      var assetsPromise = supabaseClient ? getRemoteBackupAssets() :
+        Promise.all([readAllRecords(SITE_ASSET_STORE_NAME), readAllRecords(IMAGE_STORE_NAME)]).then(function(stores) {
+        var assets = [];
+        stores[0].forEach(function(record) {
+          assets.push({ store: SITE_ASSET_STORE_NAME, record: record });
+        });
+        stores[1].forEach(function(record) {
+          assets.push({ store: IMAGE_STORE_NAME, record: record });
+        });
+        return Promise.all(assets.map(function(asset) {
+          return blobToDataUrl(asset.record.blob).then(function(data) {
+            return {
+              store: asset.store,
+              record: Object.assign({}, asset.record, { blob: undefined, data: data })
+            };
+          });
+        }));
+      });
+      assetsPromise.then(function(result) {
+        var assets = Array.isArray(result) ? result : result.assets;
+        var backup = {
+          schemaVersion: 1,
+          settings: Array.isArray(result) ? siteSettings : result.settings,
+          assets: assets
+        };
+        var file = new Blob([JSON.stringify(backup)], { type: "application/json" });
+        var url = URL.createObjectURL(file);
+        var link = document.createElement("a");
+        link.href = url;
+        link.download = "the-hive-sauvegarde-" + new Date().toISOString().slice(0, 10) + ".json";
+        link.click();
+        URL.revokeObjectURL(url);
+        setAdminStatus("Sauvegarde téléchargée.");
+      }).catch(function(error) {
+        setAdminStatus("Échec de la sauvegarde : " + error.message);
+      });
+    });
+
+    document.getElementById("import-admin-data").addEventListener("change", function(event) {
+      var input = event.target;
+      var file = input.files[0];
+      if (!file) return;
+      input.value = "";
+      if (file.size > 150 * 1024 * 1024) {
+        setAdminStatus("Le fichier de sauvegarde dépasse la limite de 150 Mo.");
+        return;
+      }
+      file.text().then(function(text) {
+        var backup = JSON.parse(text);
+        if (backup.schemaVersion !== 1 || !backup.settings || !Array.isArray(backup.assets)) {
+          throw new Error("Ce fichier de sauvegarde n’est pas reconnu.");
+        }
+        if (supabaseClient) return restoreRemoteBackupAssets(backup);
+        var grouped = { "site-assets": [], "project-images": [] };
+        return Promise.all(backup.assets.map(function(asset) {
+          if (!grouped[asset.store] || !asset.record || typeof asset.record.data !== "string" || !asset.record.data.startsWith("data:image/")) {
+            throw new Error("Le fichier contient une image ou un emplacement de stockage invalide.");
+          }
+          return fetch(asset.record.data).then(function(response) { return response.blob(); }).then(function(blob) {
+            if (!blob.type.startsWith("image/")) throw new Error("Le fichier de sauvegarde contient un format invalide.");
+            var record = Object.assign({}, asset.record, { blob: blob });
+            delete record.data;
+            grouped[asset.store].push(record);
+          });
+        })).then(function() {
+          localStorage.setItem(ADMIN_SETTINGS_KEY, JSON.stringify(backup.settings));
+          return Promise.all([
+            replaceStoreRecords(SITE_ASSET_STORE_NAME, grouped[SITE_ASSET_STORE_NAME]),
+            replaceStoreRecords(IMAGE_STORE_NAME, grouped[IMAGE_STORE_NAME])
+          ]);
+        });
+      }).then(function(result) {
+        setAdminStatus(result === "cleanup-warning"
+          ? "Sauvegarde restaurée, mais le nettoyage de certains anciens fichiers a échoué. Consultez la console."
+          : "Sauvegarde restaurée. Rechargement du site…");
+        window.location.reload();
+      }).catch(function(error) {
+        setAdminStatus("Échec de l’import : " + error.message);
+      });
+    });
+
+    applySavedCopy();
+    renderPartners();
+    if (supabaseClient) {
+      loadRemoteSiteSettings().then(function() {
+        applySavedCopy();
+        syncCostControls();
+        if (Array.isArray(siteSettings.gallery)) {
+          siteSettings.gallery.forEach(function(saved, index) {
+            if (!galleryData[index] || !saved) return;
+            if (typeof saved.title === "string") galleryData[index].title = saved.title;
+            if (typeof saved.cat === "string") galleryData[index].cat = saved.cat;
+          });
+        }
+        if (Number.isFinite(Number(siteSettings.priceM2))) document.getElementById("sim-price").value = siteSettings.priceM2;
+        renderGallery();
+        renderPartners();
+        calculateBudget();
+      }).catch(function(error) {
+        console.error("Impossible de charger le contenu partagé Supabase.", error);
+      });
+    }
+
+    // --- FORMULAIRE DE DEVIS & GA4 EVENT ---
+    function getFormMessage() {
+      var nom = document.getElementById("f-nom").value.trim();
+      var contact = document.getElementById("f-contact").value.trim();
+      var type = document.getElementById("f-type").value;
+      var lieu = document.getElementById("f-lieu").value.trim();
+      var besoin = document.getElementById("f-besoin").value.trim();
+
+      if (!nom || !contact || !lieu || !besoin) {
+        document.getElementById("qs").textContent = "Veuillez remplir tous les champs obligatoires (*).";
+        return null;
+      }
+
+      document.getElementById("qs").textContent = "";
+
+      trackEvent("lead_quote", { event_category: "Engagement", event_label: type, value: 1 });
+
+      return "Bonjour THE HIVE,\n\nJe souhaite demander un devis.\n- Nom : " + nom + "\n- Contact : " + contact + "\n- Type d'ouvrage : " + type + "\n- Localisation : " + lieu + "\n- Description : " + besoin;
+    }
+
+    document.getElementById("send-wa").addEventListener("click", function() {
+      var m = getFormMessage();
+      if (!m) return;
+      window.open("https://wa.me/241077219469?text=" + encodeURIComponent(m), "_blank", "noopener");
+      trackEvent("quote_whatsapp_click", { event_category: "Engagement" });
+      document.getElementById("qs").textContent = "WhatsApp s’ouvre avec votre message pré-rempli.";
+    });
+
+    document.getElementById("send-mail").addEventListener("click", function() {
+      var m = getFormMessage();
+      if (!m) return;
+      trackEvent("quote_email_click", { event_category: "Engagement" });
+      window.location.href = "mailto:btphiveproject@gmail.com?subject=" + encodeURIComponent("Demande de devis - THE HIVE BTP") + "&body=" + encodeURIComponent(m);
+      document.getElementById("qs").textContent = "Votre application e-mail s’ouvre avec votre demande.";
+    });
+
+    // --- GSAP ANIMATIONS & PROGRESS ---
+    gsap.registerPlugin(ScrollTrigger);
+
+    window.addEventListener('scroll', function() {
+      var winScroll = document.documentElement.scrollTop;
+      var height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      var scrolled = (winScroll / height) * 100;
+      document.getElementById('scroll-progress').style.width = scrolled + '%';
+    });
+
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      document.querySelectorAll('.stat-num').forEach(function(counter) {
+        var target = +counter.getAttribute('data-target');
+        gsap.to(counter, {
+          innerText: target,
+          duration: 2,
+          snap: { innerText: 1 },
+          scrollTrigger: { trigger: counter, start: 'top 85%' }
+        });
+      });
+    }
+
+    document.querySelectorAll('a[href*="wa.me"]').forEach(function(link) {
+      link.addEventListener("click", function() {
+        trackEvent("contact_whatsapp_click", { event_category: "Engagement", event_label: link.getAttribute("aria-label") || link.textContent.trim() });
+      });
+    });
+  </script>
+</body>
+</html>
